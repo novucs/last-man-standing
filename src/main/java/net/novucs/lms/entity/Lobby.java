@@ -2,23 +2,32 @@ package net.novucs.lms.entity;
 
 import org.bukkit.entity.Player;
 
-import java.awt.geom.Area;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
+/**
+ * The lobby. Holds the player queue and all map votes before a match begins.
+ */
 public class Lobby {
 
     private final Set<Player> playerQueue = new HashSet<>();
-    private Area chosenArena;
+    private final Map<Arena, Integer> arenaVotes = new HashMap<>();
 
     /**
-     * An unmodifiable set of the player queue.
+     * The current queue of players waiting for the game to start.
      *
-     * @return the player queue;
+     * @return the player queue.
      */
     public Set<Player> getPlayerQueue() {
         return playerQueue;
+    }
+
+    /**
+     * The total votes for each arena.
+     *
+     * @return the arena votes.
+     */
+    public Map<Arena, Integer> getArenaVotes() {
+        return arenaVotes;
     }
 
     @Override
@@ -26,18 +35,20 @@ public class Lobby {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Lobby lobby = (Lobby) o;
-        return Objects.equals(playerQueue, lobby.playerQueue);
+        return Objects.equals(playerQueue, lobby.playerQueue) &&
+                Objects.equals(arenaVotes, lobby.arenaVotes);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(playerQueue);
+        return Objects.hash(playerQueue, arenaVotes);
     }
 
     @Override
     public String toString() {
         return "Lobby{" +
                 "playerQueue=" + playerQueue +
+                ", arenaVotes=" + arenaVotes +
                 '}';
     }
 }
