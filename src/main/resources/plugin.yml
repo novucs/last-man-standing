@@ -1,5 +1,5 @@
 name: ${project.name}
 main: ${project.groupId}.${project.artifactId}.${project.name}Plugin
 version: ${project.version}
-author: Sudzzy
+author: novucs
 database: true
