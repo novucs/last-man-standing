@@ -1,4 +1,4 @@
-package net.novucs.lms.entity;
+package com.daegonner.lms.entity;
 
 import java.util.ArrayList;
 import java.util.List;

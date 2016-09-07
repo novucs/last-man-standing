@@ -1,7 +1,7 @@
-package net.novucs.lms;
+package com.daegonner.lms;
 
+import com.daegonner.lms.model.*;
 import com.google.common.collect.ImmutableList;
-import net.novucs.lms.model.*;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import javax.persistence.PersistenceException;

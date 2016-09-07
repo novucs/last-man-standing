@@ -1,10 +1,10 @@
-package net.novucs.lms;
+package com.daegonner.lms;
 
-import net.novucs.lms.entity.Arena;
-import net.novucs.lms.entity.ArenaSpawn;
-import net.novucs.lms.entity.BlockPos;
-import net.novucs.lms.entity.Region;
-import net.novucs.lms.model.*;
+import com.daegonner.lms.entity.Arena;
+import com.daegonner.lms.entity.Region;
+import com.daegonner.lms.model.*;
+import com.daegonner.lms.entity.ArenaSpawn;
+import com.daegonner.lms.entity.BlockPos;
 import org.bukkit.World;
 
 import java.util.ArrayList;

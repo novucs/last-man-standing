@@ -1,8 +1,8 @@
-package net.novucs.lms.model;
+package com.daegonner.lms.model;
 
 import com.avaje.ebean.validation.NotNull;
-import net.novucs.lms.LastManStandingPlugin;
-import net.novucs.lms.entity.BlockPos;
+import com.daegonner.lms.LastManStandingPlugin;
+import com.daegonner.lms.entity.BlockPos;
 
 import javax.persistence.*;
 import java.util.Objects;

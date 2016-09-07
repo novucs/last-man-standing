@@ -1,4 +1,4 @@
-package net.novucs.lms.model;
+package com.daegonner.lms.model;
 
 import javax.persistence.*;
 import java.util.Objects;

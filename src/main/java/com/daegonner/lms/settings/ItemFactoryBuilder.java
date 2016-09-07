@@ -1,4 +1,4 @@
-package net.novucs.lms.settings;
+package com.daegonner.lms.settings;
 
 
 import com.google.common.collect.ImmutableList;

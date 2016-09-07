@@ -1,7 +1,7 @@
-package net.novucs.lms.model;
+package com.daegonner.lms.model;
 
 import com.avaje.ebean.validation.NotNull;
-import net.novucs.lms.LastManStandingPlugin;
+import com.daegonner.lms.LastManStandingPlugin;
 import org.bukkit.Location;
 
 import javax.persistence.*;

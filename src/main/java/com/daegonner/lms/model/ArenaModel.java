@@ -1,8 +1,8 @@
-package net.novucs.lms.model;
+package com.daegonner.lms.model;
 
 import com.avaje.ebean.validation.Length;
 import com.avaje.ebean.validation.NotEmpty;
-import net.novucs.lms.entity.Arena;
+import com.daegonner.lms.entity.Arena;
 
 import javax.persistence.*;
 import java.util.List;

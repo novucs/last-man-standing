@@ -1,6 +1,6 @@
-package net.novucs.lms.model;
+package com.daegonner.lms.model;
 
-import net.novucs.lms.entity.Region;
+import com.daegonner.lms.entity.Region;
 
 import javax.persistence.*;
 import java.util.Objects;

@@ -1,4 +1,4 @@
-package net.novucs.lms.entity;
+package com.daegonner.lms.entity;
 
 import org.bukkit.Location;
 import org.bukkit.World;
