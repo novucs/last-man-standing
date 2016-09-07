@@ -37,7 +37,6 @@ arena-settings:
         potion-type: instant_heal
         level: 2
         splash: true
-        stack: false
         amount: 24
       armour:
         head:
