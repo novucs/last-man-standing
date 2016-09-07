@@ -1,7 +1,6 @@
 package net.novucs.lms;
 
 import com.google.common.collect.ImmutableList;
-import net.novucs.lms.entity.Arena;
 import net.novucs.lms.model.*;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -20,11 +19,12 @@ public class LastManStandingPlugin extends JavaPlugin {
             ArenaSpawnModel.class
     );
 
-    private final List<Arena> arenas = new ArrayList<>();
+    private final ArenaManager arenaManager = new ArenaManager(this);
 
     @Override
     public void onEnable() {
         setupDatabase();
+        arenaManager.setup();
     }
 
     private void setupDatabase() {

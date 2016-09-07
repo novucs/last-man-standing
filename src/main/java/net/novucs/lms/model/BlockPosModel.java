@@ -2,13 +2,13 @@ package net.novucs.lms.model;
 
 import com.avaje.ebean.validation.NotNull;
 import net.novucs.lms.LastManStandingPlugin;
-import org.bukkit.Location;
+import net.novucs.lms.entity.BlockPos;
 
 import javax.persistence.*;
 import java.util.Objects;
 
 /**
- * A representation of a {@link Location} to be stored in the LMS database.
+ * A representation of a {@link BlockPos} to be stored in the LMS database.
  */
 @Entity
 @Table(name = "block_pos")
@@ -122,7 +122,7 @@ public class BlockPosModel implements Model {
      * @param z      the Z coordinate.
      * @return the block position using these coordinates.
      */
-    public static BlockPosModel get(LastManStandingPlugin plugin, WorldModel world, int x, int y, int z) {
+    public static BlockPosModel of(LastManStandingPlugin plugin, WorldModel world, int x, int y, int z) {
         BlockPosModel model = plugin.getDatabase().find(BlockPosModel.class).where()
                 .eq("world", world).eq("x", x).eq("y", y).eq("z", z).findUnique();
         if (model == null) {

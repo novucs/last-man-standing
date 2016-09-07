@@ -176,7 +176,7 @@ public class EntityPosModel implements Model {
      * @param pitch  the pitch.
      * @return the entity position using these coordinates.
      */
-    public static EntityPosModel get(LastManStandingPlugin plugin, WorldModel world, double x, double y, double z,
+    public static EntityPosModel of(LastManStandingPlugin plugin, WorldModel world, double x, double y, double z,
                                      float yaw, float pitch) {
         EntityPosModel model = plugin.getDatabase().find(EntityPosModel.class).where()
                 .eq("world", world).eq("x", x).eq("y", y).eq("z", z).eq("yaw", yaw).eq("pitch", pitch).findUnique();
