@@ -1,8 +1,8 @@
 package net.novucs.lms;
 
 import com.google.common.collect.ImmutableList;
+import net.novucs.lms.entity.Arena;
 import net.novucs.lms.model.*;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import javax.persistence.PersistenceException;
@@ -20,27 +20,11 @@ public class LastManStandingPlugin extends JavaPlugin {
             ArenaSpawnModel.class
     );
 
+    private final List<Arena> arenas = new ArrayList<>();
+
     @Override
     public void onEnable() {
         setupDatabase();
-        test();
-        test();
-    }
-
-    private void test() {
-        System.out.println("trying via main method");
-        WorldModel model = getDatabase().find(WorldModel.class).where().eq("name", "world").findUnique();
-        if (model == null) {
-            model = new WorldModel();
-            model.setName("world");
-        }
-
-        System.out.println("WORLD MODEL: " + model);
-        System.out.println("Getting world");
-        WorldModel world = WorldModel.get(this, "world");
-        System.out.println("Getting blockpos");
-        BlockPosModel pos = BlockPosModel.get(this, world, 1, 2, 3);
-        System.out.println("finished");
     }
 
     private void setupDatabase() {

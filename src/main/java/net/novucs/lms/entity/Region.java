@@ -1,6 +1,6 @@
 package net.novucs.lms.entity;
 
-import net.novucs.lms.model.BlockPosModel;
+import org.bukkit.Location;
 import org.bukkit.World;
 
 import java.util.Objects;
@@ -10,21 +10,34 @@ import java.util.Objects;
  */
 public class Region {
 
-    private BlockPosModel max;
-    private BlockPosModel min;
+    private BlockPos max;
+    private BlockPos min;
+
+    /**
+     * Helper method to allow creation of a {@link BlockPos} from two
+     * {@link Location} objects.
+     *
+     * @param pos1 the first {@link Location}.
+     * @param pos2 the second {@link Location}.
+     * @return the new {@link Region}.
+     * @throws IllegalArgumentException if locations are in different worlds.
+     */
+    public static Region create(Location loc1, Location loc2) {
+        return create(BlockPos.of(loc1), BlockPos.of(loc2));
+    }
 
     /**
      * Creates a region from two locations, automatically calculates which
      * locations are minimum and maximum.
      *
-     * @param loc1 the first location.
-     * @param loc2 the second location.
+     * @param pos1 the first {@link BlockPos}.
+     * @param pos2 the second {@link BlockPos}.
      * @return the new {@link Region}.
-     * @throws IllegalArgumentException if locations are in different worlds.
+     * @throws IllegalArgumentException if positions are in different worlds.
      */
-    public static Region create(BlockPosModel loc1, BlockPosModel loc2) {
+    public static Region create(BlockPos pos1, BlockPos pos2) {
         Region region = new Region();
-        region.setPoints(loc1, loc2);
+        region.setPoints(pos1, pos2);
         return region;
     }
 
@@ -34,45 +47,45 @@ public class Region {
     /**
      * Gets the maximum location.
      *
-     * @return the maximum {@link BlockPosModel}.
+     * @return the maximum {@link BlockPos}.
      */
-    public BlockPosModel getMax() {
+    public BlockPos getMax() {
         return max;
     }
 
     /**
      * Gets the minimum block position.
      *
-     * @return the minimum {@link BlockPosModel}.
+     * @return the minimum {@link BlockPos}.
      */
-    public BlockPosModel getMin() {
+    public BlockPos getMin() {
         return min;
     }
 
     /**
      * Sets both points of the region, initializing it.
      *
-     * @param pos1 the first {@link BlockPosModel}.
-     * @param pos2 the second {@link BlockPosModel}.
-     * @throws IllegalArgumentException if locations are in different worlds.
+     * @param pos1 the first {@link BlockPos}.
+     * @param pos2 the second {@link BlockPos}.
+     * @throws IllegalArgumentException if positions are in different worlds.
      */
-    public void setPoints(BlockPosModel pos1, BlockPosModel pos2) {
-//        if (pos1.getWorld() != pos2.getWorld()) {
-//            throw new IllegalArgumentException("Both worlds must be in the same world");
-//        }
-//
-//        // Calculate the maximum and minimum coordinates for the two locations.
-//        World world = pos1.getWorld();
-//        int maxX = Math.max(pos1.getX(), pos2.getX());
-//        int minX = Math.min(pos1.getX(), pos2.getX());
-//        int maxY = Math.max(pos1.getY(), pos2.getY());
-//        int minY = Math.min(pos1.getY(), pos2.getY());
-//        int maxZ = Math.max(pos1.getZ(), pos2.getZ());
-//        int minZ = Math.min(pos1.getZ(), pos2.getZ());
-//
-//        // Set the new locations.
-//        max = new BlockPosModel(world, maxX, maxY, maxZ);
-//        min = new BlockPosModel(world, minX, minY, minZ);
+    public void setPoints(BlockPos pos1, BlockPos pos2) {
+        if (pos1.getWorld() != pos2.getWorld()) {
+            throw new IllegalArgumentException("Both worlds must be in the same world");
+        }
+
+        // Calculate the maximum and minimum coordinates for the two locations.
+        World world = pos1.getWorld();
+        int maxX = Math.max(pos1.getX(), pos2.getX());
+        int minX = Math.min(pos1.getX(), pos2.getX());
+        int maxY = Math.max(pos1.getY(), pos2.getY());
+        int minY = Math.min(pos1.getY(), pos2.getY());
+        int maxZ = Math.max(pos1.getZ(), pos2.getZ());
+        int minZ = Math.min(pos1.getZ(), pos2.getZ());
+
+        // Set the new locations.
+        max = new BlockPos(world, maxX, maxY, maxZ);
+        min = new BlockPos(world, minX, minY, minZ);
     }
 
     @Override
