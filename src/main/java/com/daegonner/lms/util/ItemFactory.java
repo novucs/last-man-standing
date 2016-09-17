@@ -1,4 +1,4 @@
-package com.daegonner.lms.settings;
+package com.daegonner.lms.util;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -134,9 +134,9 @@ public class ItemFactory {
      */
     private int getAmount() {
         if (isMaxSet()) {
-            return min;
-        } else {
             return ThreadLocalRandom.current().nextInt(min, max);
+        } else {
+            return min;
         }
     }
 
@@ -146,7 +146,7 @@ public class ItemFactory {
      * @return {@code true} if it has been set.
      */
     private boolean isMaxSet() {
-        return max == -1;
+        return max > -1;
     }
 
     @Override

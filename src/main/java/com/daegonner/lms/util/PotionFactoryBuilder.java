@@ -1,4 +1,4 @@
-package com.daegonner.lms.settings;
+package com.daegonner.lms.util;
 
 import com.google.common.collect.ImmutableList;
 import org.bukkit.potion.PotionType;

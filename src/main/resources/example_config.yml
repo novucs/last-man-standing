@@ -12,7 +12,7 @@ arena-settings:
     kill-money:
       min: 2000
       max: 5000
-    reward:
+    rewards:
     - material: diamond_block
       amount:
         max: 512
@@ -28,34 +28,33 @@ arena-settings:
     - type: command
       sender: console
       command: "tell {player} Congratulations!"
-    kit:
-      inventory:
-      - material: diamond_sword
+    inventory:
+    - material: diamond_sword
+      enchantments:
+        sharpness: 2
+    - material: potion
+      potion-type: instant_heal
+      level: 2
+      splash: true
+      amount: 24
+    armour:
+      head:
+        material: diamond_helmet
         enchantments:
-          sharpness: 2
-      - material: potion
-        potion-type: instant_heal
-        level: 2
-        splash: true
-        amount: 24
-      armour:
-        head:
-          material: diamond_helmet
-          enchantments:
-            protection: 2
-            unbreaking: 3
-        chest:
-          material: diamond_chestplate
-          enchantments:
-            protection: 2
-            unbreaking: 3
-        legs:
-          material: diamond_leggings
-          enchantments:
-            protection: 2
-            unbreaking: 3
-        boots:
-          material: diamond_boots
-          enchantments:
-            protection: 2
-            unbreaking: 3
+          protection: 2
+          unbreaking: 3
+      chest:
+        material: diamond_chestplate
+        enchantments:
+          protection: 2
+          unbreaking: 3
+      legs:
+        material: diamond_leggings
+        enchantments:
+          protection: 2
+          unbreaking: 3
+      boots:
+        material: diamond_boots
+        enchantments:
+          protection: 2
+          unbreaking: 3

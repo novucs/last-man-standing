@@ -9,6 +9,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
@@ -20,6 +21,55 @@ public class Settings {
 
     private FileConfiguration config;
     private File configFile;
+
+    private String lobbyStartMessage;
+    private String lobbyAnnounceMessage;
+    private String gameTeleportedMessage;
+    private String gameWarmupMessage;
+
+    private List<Integer> announcementTimes;
+
+    private Map<String, ArenaSettings> arenaSettingsMap;
+
+    public static int getLatestVersion() {
+        return LATEST_VERSION;
+    }
+
+    public LastManStandingPlugin getPlugin() {
+        return plugin;
+    }
+
+    public FileConfiguration getConfig() {
+        return config;
+    }
+
+    public File getConfigFile() {
+        return configFile;
+    }
+
+    public String getLobbyStartMessage() {
+        return lobbyStartMessage;
+    }
+
+    public String getLobbyAnnounceMessage() {
+        return lobbyAnnounceMessage;
+    }
+
+    public String getGameTeleportedMessage() {
+        return gameTeleportedMessage;
+    }
+
+    public String getGameWarmupMessage() {
+        return gameWarmupMessage;
+    }
+
+    public List<Integer> getAnnouncementTimes() {
+        return announcementTimes;
+    }
+
+    public ArenaSettings getArenaSettings(String arenaName) {
+        // TODO: Return default arena settings here if none exists currently.
+    }
 
     public Settings(LastManStandingPlugin plugin) {
         this.plugin = plugin;
