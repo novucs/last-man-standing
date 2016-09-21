@@ -141,6 +141,33 @@ public class ArenaSettings {
         killMoneyMin = getDouble("kill-money.min", -1);
     }
 
+    private Map<String, Object> serialize(ItemStack item) {
+        Map<String, Object> target = new HashMap<>();
+        target.put("material", item.getType().toString().toLowerCase());
+        target.put("data", item.getDurability());
+        target.put("amount", item.getAmount());
+        target.put("name", item.getItemMeta().getDisplayName());
+        target.put("lore", item.getItemMeta().getLore());
+        for (Map.Entry<Enchantment, Integer> entry : item.getItemMeta().getEnchants().entrySet()) {
+            target.put("enchantments." + entry.getKey().toString().toLowerCase(), entry.getValue());
+        }
+        return target;
+    }
+
+    private Map<String, Object> serialzie(ItemFactory factory) {
+        Map<String, Object> target = new HashMap<>();
+        target.put("material", factory.getMaterial());
+        target.put("data", factory.getData());
+        target.put("amount.max", factory.getMax());
+        target.put("amount.min", factory.getMin());
+        target.put("name", factory.getName());
+        target.put("lore", factory.getLore());
+        for (Map.Entry<Enchantment, Integer> entry : factory.getEnchantments().entrySet()) {
+            target.put("enchantments." + entry.getKey().toString().toLowerCase(), entry.getValue());
+        }
+        return target;
+    }
+
     private ItemStack parseItem(Map<?, ?> data) {
         ItemFactoryBuilder builder = new ItemFactoryBuilder();
         GenericUtils.getEnum(Material.class, data, "material").ifPresent(builder::material);
