@@ -1,15 +1,16 @@
 package com.daegonner.lms;
 
 import com.daegonner.lms.entity.Arena;
-import com.daegonner.lms.entity.Region;
-import com.daegonner.lms.model.*;
 import com.daegonner.lms.entity.ArenaSpawn;
 import com.daegonner.lms.entity.BlockPos;
+import com.daegonner.lms.entity.Region;
+import com.daegonner.lms.model.*;
 import org.bukkit.World;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 /**
@@ -31,6 +32,15 @@ public class ArenaManager {
 
     public List<Arena> getArenas() {
         return arenas;
+    }
+
+    /**
+     * Gets a random loaded arena.
+     *
+     * @return the arena.
+     */
+    public Arena getRandomArena() {
+        return arenas.get(ThreadLocalRandom.current().nextInt(arenas.size()));
     }
 
     /**

@@ -35,7 +35,7 @@ public class Lobby {
      *
      * @return the arena.
      */
-    public Arena getHighestVotedArena() {
+    public Optional<Arena> getHighestVotedArena() {
         int voteCount = 0;
         Arena arena = null;
         for (Map.Entry<Arena, Integer> entry : arenaVotes.entrySet()) {
@@ -44,7 +44,7 @@ public class Lobby {
                 arena = entry.getKey();
             }
         }
-        return arena;
+        return Optional.ofNullable(arena);
     }
 
     @Override

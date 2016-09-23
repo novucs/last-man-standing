@@ -101,7 +101,7 @@ public class GameTask extends BukkitRunnable {
      * Attempts to start a new game for the active lobby.
      */
     private void startGame() {
-        Arena arena = lobby.getHighestVotedArena();
+        Arena arena = lobby.getHighestVotedArena().orElse(plugin.getArenaManager().getRandomArena());
         ArenaSettings settings = plugin.getSettings().getArenaSettings(arena.getName());
 
         if (lobby.getPlayerQueue().size() < settings.getMinPlayers()) {
