@@ -1,6 +1,7 @@
 package com.daegonner.lms.entity;
 
 import com.daegonner.lms.settings.ArenaSettings;
+import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -15,7 +16,7 @@ public class Game {
     private final Arena arena;
     private final Set<Player> participants;
     private final Set<Player> spectators = new HashSet<>();
-    private final Map<Player, ItemStack[]> inventories = new HashMap<>();
+    private final Map<Player, PlayerSnapshot> snapshots = new HashMap<>();
 
     public Game(Arena arena, Set<Player> participants) {
         this.arena = arena;
@@ -50,12 +51,19 @@ public class Game {
     }
 
     /**
-     * Gets the stored inventories for recovery on death or game end.
+     * Gets the participant snapshots for recovery on death or game end.
      *
-     * @return the inventories.
+     * @return the snapshots.
      */
-    public Map<Player, ItemStack[]> getInventories() {
-        return inventories;
+    public Map<Player, PlayerSnapshot> getSnapshots() {
+        return snapshots;
+    }
+
+    /**
+     * Pulses the current game.
+     */
+    public void pulse() {
+        // TODO: Implement fail safe checks.
     }
 
     /**
@@ -64,25 +72,25 @@ public class Game {
      * @param settings the settings for this specific arena.
      */
     public void start(ArenaSettings settings) {
-        storeInventories();
+        snapshotParticipants();
         teleportParticipants();
         loadKits(settings);
     }
 
     /**
-     * Stores the inventory of every participant in the game.
+     * Stores the snapshot of every participant in the game.
      */
-    private void storeInventories() {
-        participants.forEach(this::storeInventory);
+    private void snapshotParticipants() {
+        participants.forEach(this::snapshotParticipant);
     }
 
     /**
-     * Stores a players inventory.
+     * Stores a players snapshot.
      *
      * @param player the player.
      */
-    private void storeInventory(Player player) {
-        inventories.put(player, player.getInventory().getContents());
+    private void snapshotParticipant(Player player) {
+        snapshots.put(player, PlayerSnapshot.of(player));
     }
 
     /**
@@ -108,6 +116,23 @@ public class Game {
             inventory.setChestplate(settings.getBodyArmour());
             inventory.setLeggings(settings.getLegArmour());
             inventory.setBoots(settings.getLegArmour());
+            player.setGameMode(GameMode.ADVENTURE);
+        }
+    }
+
+    /**
+     * Registers a player death in the game.
+     *
+     * @param player the player.
+     */
+    public void playerDeath(Player player) {
+        if (!participants.contains(player)) {
+            return;
+        }
+
+        PlayerSnapshot snapshot = snapshots.remove(player);
+        if (snapshot != null) {
+            snapshot.restore();
         }
     }
 
@@ -119,12 +144,12 @@ public class Game {
         return Objects.equals(arena, game.arena) &&
                 Objects.equals(participants, game.participants) &&
                 Objects.equals(spectators, game.spectators) &&
-                Objects.equals(inventories, game.inventories);
+                Objects.equals(snapshots, game.snapshots);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(arena, participants, spectators, inventories);
+        return Objects.hash(arena, participants, spectators, snapshots);
     }
 
     @Override
@@ -133,7 +158,7 @@ public class Game {
                 "arena=" + arena +
                 ", participants=" + participants +
                 ", spectators=" + spectators +
-                ", inventories=" + inventories +
+                ", snapshots=" + snapshots +
                 '}';
     }
 }

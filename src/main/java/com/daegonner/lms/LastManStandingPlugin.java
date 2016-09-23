@@ -1,10 +1,12 @@
 package com.daegonner.lms;
 
+import com.daegonner.lms.listener.PlayerListener;
 import com.daegonner.lms.model.*;
 import com.daegonner.lms.settings.Settings;
 import com.daegonner.lms.task.GameTask;
 import com.google.common.collect.ImmutableList;
 import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import javax.persistence.PersistenceException;
@@ -27,6 +29,9 @@ public class LastManStandingPlugin extends JavaPlugin {
     private final Settings settings = new Settings(this);
     private final ArenaManager arenaManager = new ArenaManager(this);
     private final GameTask gameTask = new GameTask(this);
+    private final ImmutableList<Listener> listeners = ImmutableList.of(
+            new PlayerListener(this)
+    );
 
     public Settings getSettings() {
         return settings;
@@ -34,6 +39,10 @@ public class LastManStandingPlugin extends JavaPlugin {
 
     public ArenaManager getArenaManager() {
         return arenaManager;
+    }
+
+    public GameTask getGameTask() {
+        return gameTask;
     }
 
     @Override
@@ -44,6 +53,7 @@ public class LastManStandingPlugin extends JavaPlugin {
         setupDatabase();
         arenaManager.setup();
         gameTask.runTaskTimer(this, 1, 1);
+        listeners.forEach(listener -> getServer().getPluginManager().registerEvents(listener, this));
     }
 
     /**

@@ -21,12 +21,21 @@ public class GameTask extends BukkitRunnable {
         return lobby;
     }
 
+    public Game getGame() {
+        return game;
+    }
+
     public GameTask(LastManStandingPlugin plugin) {
         this.plugin = plugin;
     }
 
     @Override
     public void run() {
+        if (hasGame()) {
+            game.pulse();
+            return;
+        }
+
         if (!hasLobby()) {
             if (isNextLobbyReady()) {
                 createLobby();
@@ -43,11 +52,19 @@ public class GameTask extends BukkitRunnable {
     }
 
     /**
+     * Checks if the task has an active game.
+     * @return {@code true} if there is an active game.
+     */
+    public boolean hasGame() {
+        return game != null;
+    }
+
+    /**
      * Checks if the task has an active lobby.
      *
      * @return {@code true} if there is an active lobby.
      */
-    private boolean hasLobby() {
+    public boolean hasLobby() {
         return lobby != null;
     }
 
