@@ -85,7 +85,7 @@ public class LastManStandingPlugin extends JavaPlugin {
         try {
             getDatabase().find(ArenaSpawnModel.class).findRowCount();
         } catch (PersistenceException ex) {
-            System.out.println("Installing database for " + getDescription().getName() + " due to first time usage");
+            getLogger().info("Installing database due to first time usage.");
             installDDL();
         }
     }
