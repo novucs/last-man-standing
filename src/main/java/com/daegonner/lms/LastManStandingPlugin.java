@@ -2,6 +2,7 @@ package com.daegonner.lms;
 
 import com.daegonner.lms.model.*;
 import com.daegonner.lms.settings.Settings;
+import com.daegonner.lms.task.GameTask;
 import com.google.common.collect.ImmutableList;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -25,6 +26,7 @@ public class LastManStandingPlugin extends JavaPlugin {
 
     private final Settings settings = new Settings(this);
     private final ArenaManager arenaManager = new ArenaManager(this);
+    private final GameTask gameTask = new GameTask(this);
 
     public Settings getSettings() {
         return settings;
@@ -41,6 +43,7 @@ public class LastManStandingPlugin extends JavaPlugin {
 
         setupDatabase();
         arenaManager.setup();
+        gameTask.runTaskTimer(this, 1, 1);
     }
 
     /**
