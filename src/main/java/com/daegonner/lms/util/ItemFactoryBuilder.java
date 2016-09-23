@@ -13,6 +13,7 @@ import java.util.*;
  */
 public class ItemFactoryBuilder {
 
+    private double chance = 1;
     private Material material = Material.AIR;
     private byte data = 0;
     private int max = -1;
@@ -20,6 +21,17 @@ public class ItemFactoryBuilder {
     private String name;
     private List<String> lore = new ArrayList<>();
     private Map<Enchantment, Integer> enchantments = new HashMap<>();
+
+    /**
+     * Sets the chance for the item to be spawned.
+     *
+     * @param chance the chance.
+     * @return this.
+     */
+    public ItemFactoryBuilder chance(double chance) {
+        this.chance = chance;
+        return this;
+    }
 
     /**
      * Sets the material for item creation.
@@ -57,7 +69,7 @@ public class ItemFactoryBuilder {
     /**
      * Sets the minimum amount of the items when called.
      *
-     * @param max the lower item limit on creation.
+     * @param min the lower item limit on creation.
      * @return this.
      */
     public ItemFactoryBuilder min(int min) {
@@ -127,7 +139,7 @@ public class ItemFactoryBuilder {
      * @return the item factory.
      */
     public ItemFactory build() {
-        return new ItemFactory(material, data, max, min, name, ImmutableList.copyOf(lore),
+        return new ItemFactory(chance, material, data, max, min, name, ImmutableList.copyOf(lore),
                 ImmutableMap.copyOf(enchantments));
     }
 
@@ -135,25 +147,27 @@ public class ItemFactoryBuilder {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ItemFactoryBuilder that = (ItemFactoryBuilder) o;
-        return data == that.data &&
-                max == that.max &&
-                min == that.min &&
-                material == that.material &&
-                Objects.equals(name, that.name) &&
-                Objects.equals(lore, that.lore) &&
-                Objects.equals(enchantments, that.enchantments);
+        ItemFactoryBuilder builder = (ItemFactoryBuilder) o;
+        return Double.compare(builder.chance, chance) == 0 &&
+                data == builder.data &&
+                max == builder.max &&
+                min == builder.min &&
+                material == builder.material &&
+                Objects.equals(name, builder.name) &&
+                Objects.equals(lore, builder.lore) &&
+                Objects.equals(enchantments, builder.enchantments);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(material, data, max, min, name, lore, enchantments);
+        return Objects.hash(chance, material, data, max, min, name, lore, enchantments);
     }
 
     @Override
     public String toString() {
         return "ItemFactoryBuilder{" +
-                "material=" + material +
+                "chance=" + chance +
+                ", material=" + material +
                 ", data=" + data +
                 ", max=" + max +
                 ", min=" + min +

@@ -69,6 +69,7 @@ public class Settings {
 
     public ArenaSettings getArenaSettings(String arenaName) {
         // TODO: Return default arena settings here if none exists currently.
+        return null;
     }
 
     public Settings(LastManStandingPlugin plugin) {

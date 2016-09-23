@@ -12,6 +12,7 @@ import java.util.Objects;
  */
 public class PotionFactoryBuilder {
 
+    private double chance;
     private int max = -1;
     private int min = 1;
     private String name;
@@ -20,6 +21,17 @@ public class PotionFactoryBuilder {
     private boolean upgraded;
     private boolean extended;
     private boolean splash;
+
+    /**
+     * Sets the chance for the item to be spawned.
+     *
+     * @param chance the chance.
+     * @return this.
+     */
+    public PotionFactoryBuilder chance(double chance) {
+        this.chance = chance;
+        return this;
+    }
 
     /**
      * Sets the maximum amount of the potions when called.
@@ -126,7 +138,8 @@ public class PotionFactoryBuilder {
      * @return the potion factory.
      */
     public PotionFactory build() {
-        return new PotionFactory(max, min, name, ImmutableList.copyOf(lore), potionType, upgraded, extended, splash);
+        return new PotionFactory(chance, max, min, name, ImmutableList.copyOf(lore), potionType, upgraded, extended,
+                splash);
     }
 
     @Override
@@ -134,7 +147,8 @@ public class PotionFactoryBuilder {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PotionFactoryBuilder that = (PotionFactoryBuilder) o;
-        return max == that.max &&
+        return Double.compare(that.chance, chance) == 0 &&
+                max == that.max &&
                 min == that.min &&
                 upgraded == that.upgraded &&
                 extended == that.extended &&
@@ -146,13 +160,14 @@ public class PotionFactoryBuilder {
 
     @Override
     public int hashCode() {
-        return Objects.hash(max, min, name, lore, potionType, upgraded, extended, splash);
+        return Objects.hash(chance, max, min, name, lore, potionType, upgraded, extended, splash);
     }
 
     @Override
     public String toString() {
         return "PotionFactoryBuilder{" +
-                "max=" + max +
+                "chance=" + chance +
+                ", max=" + max +
                 ", min=" + min +
                 ", name='" + name + '\'' +
                 ", lore=" + lore +

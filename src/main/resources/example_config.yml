@@ -24,7 +24,7 @@ arena-settings:
         fire_aspect: 2
       name: "&dLMS Sword"
       lore:
-      - "&eRecieved by winning LMS"
+      - "&eReceived by winning LMS"
     - type: command
       sender: console
       command: "tell {player} Congratulations!"
@@ -34,7 +34,7 @@ arena-settings:
         sharpness: 2
     - material: potion
       potion-type: instant_heal
-      level: 2
+      upgraded: true
       splash: true
       amount: 24
     armour:

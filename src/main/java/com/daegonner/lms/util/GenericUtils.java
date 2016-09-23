@@ -1,16 +1,37 @@
 package com.daegonner.lms.util;
 
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public final class GenericUtils {
 
     private GenericUtils() {
+    }
+
+    public static Map<Enchantment, Integer> parseEnchantments(Map<?, ?> toParse) {
+        Map<Enchantment, Integer> target = new HashMap<>();
+        for (Map.Entry<?, ?> entry : toParse.entrySet()) {
+            Object key = entry.getKey();
+            Object value = entry.getValue();
+            Enchantment enchantment = null;
+            int level = 0;
+
+            if (key instanceof String) {
+                enchantment = Enchantment.getByName((String) key);
+            }
+
+            if (value instanceof Integer) {
+                level = (Integer) value;
+            }
+
+            if (level > 0 && enchantment != null) {
+                target.put(enchantment, level);
+            }
+        }
+        return target;
     }
 
     public static <K extends Enum<K>, V> Map<K, V> castEnumMap(Class<K> keyType, Class<? extends V> valueType, Map<?, ?> toCast) {

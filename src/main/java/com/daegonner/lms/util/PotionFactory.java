@@ -9,6 +9,8 @@ import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionType;
 
 import java.util.Objects;
+import java.util.Optional;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * A factory for potion creation.
@@ -20,9 +22,9 @@ public class PotionFactory extends ItemFactory {
     private final boolean extended;
     private final boolean splash;
 
-    public PotionFactory(int max, int min, String name, ImmutableList<String> lore, PotionType potionType,
-                         boolean upgraded, boolean extended, boolean splash) {
-        super(Material.POTION, (byte) 0, max, min, name, lore, ImmutableMap.of());
+    public PotionFactory(double chance, int max, int min, String name, ImmutableList<String> lore,
+                         PotionType potionType, boolean upgraded, boolean extended, boolean splash) {
+        super(chance, Material.POTION, (byte) 0, max, min, name, lore, ImmutableMap.of());
         this.potionType = potionType;
         this.upgraded = upgraded;
         this.extended = extended;
@@ -66,8 +68,19 @@ public class PotionFactory extends ItemFactory {
     }
 
     @Override
-    public ItemStack create() {
-        ItemStack item = super.create();
+    public Optional<ItemStack> create() {
+        // Return nothing if unlucky.
+        if (getChance() < ThreadLocalRandom.current().nextDouble()) {
+            return Optional.empty();
+        }
+
+        // Return the newly constructed item.
+        return Optional.of(forceCreate());
+    }
+
+    @Override
+    public ItemStack forceCreate() {
+        ItemStack item = super.forceCreate();
         PotionMeta meta = (PotionMeta) item.getItemMeta();
         PotionData data = new PotionData(potionType, upgraded, extended);
         meta.setBasePotionData(data);

@@ -3,18 +3,23 @@ package com.daegonner.lms.util;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import org.bukkit.Material;
+import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * A factory for item creation.
  */
-public class ItemFactory {
+public class ItemFactory implements ConfigurationSerializable {
 
+    private final double chance;
     private final Material material;
     private final byte data;
     private final int max;
@@ -23,8 +28,9 @@ public class ItemFactory {
     private final ImmutableList<String> lore;
     private final ImmutableMap<Enchantment, Integer> enchantments;
 
-    public ItemFactory(Material material, byte data, int max, int min, String name, ImmutableList<String> lore,
-                       ImmutableMap<Enchantment, Integer> enchantments) {
+    public ItemFactory(double chance, Material material, byte data, int max, int min, String name,
+                       ImmutableList<String> lore, ImmutableMap<Enchantment, Integer> enchantments) {
+        this.chance = chance;
         this.material = material;
         this.data = data;
         this.max = max;
@@ -32,6 +38,15 @@ public class ItemFactory {
         this.name = name;
         this.lore = lore;
         this.enchantments = enchantments;
+    }
+
+    /**
+     * Gets the chance.
+     *
+     * @return the chance.
+     */
+    public double getChance() {
+        return chance;
     }
 
     /**
@@ -102,7 +117,22 @@ public class ItemFactory {
      *
      * @return the newly constructed {@link ItemStack}.
      */
-    public ItemStack create() {
+    public Optional<ItemStack> create() {
+        // Return nothing if unlucky.
+        if (chance < ThreadLocalRandom.current().nextDouble()) {
+            return Optional.empty();
+        }
+
+        // Return the newly constructed item.
+        return Optional.of(forceCreate());
+    }
+
+    /**
+     * Creates a new item with the current factory settings, ignoring chance.
+     *
+     * @return the newly constructed {@link ItemStack}.
+     */
+    public ItemStack forceCreate() {
         // Create the item stack and apply enchantments.
         ItemStack item = new ItemStack(material, getAmount(), data);
         item.addEnchantments(enchantments);
@@ -138,6 +168,54 @@ public class ItemFactory {
         } else {
             return min;
         }
+    }
+
+    public static ItemFactory deserialize(Map<?, ?> data) {
+        ItemFactoryBuilder builder = new ItemFactoryBuilder();
+        GenericUtils.getEnum(Material.class, data, "material").ifPresent(builder::material);
+        GenericUtils.getInt(data, "data").ifPresent(b -> builder.data(b.byteValue()));
+        GenericUtils.getInt(data, "amount.max").ifPresent(builder::max);
+        GenericUtils.getInt(data, "amount.min").ifPresent(builder::min);
+        GenericUtils.getString(data, "name").ifPresent(builder::name);
+        GenericUtils.getList(data, "lore").ifPresent(l -> builder.lore(GenericUtils.castList(String.class, l)));
+        GenericUtils.getMap(data, "enchantments").ifPresent(m -> builder.enchantments(GenericUtils.parseEnchantments(m)));
+        return builder.build();
+    }
+
+    @Override
+    public Map<String, Object> serialize() {
+        Map<String, Object> target = new HashMap<>();
+
+        if (material != Material.AIR) {
+            target.put("material", material);
+        }
+
+        if (data != 0) {
+            target.put("data", data);
+        }
+
+        if (isMaxSet()) {
+            target.put("amount.max", max);
+        }
+
+        if (min > 1) {
+            target.put("amount.min", min);
+        }
+
+        if (name != null) {
+            target.put("name", name);
+        }
+
+        if (!lore.isEmpty()) {
+            target.put("lore", lore);
+        }
+
+        if (!enchantments.isEmpty()) {
+            for (Map.Entry<Enchantment, Integer> entry : enchantments.entrySet()) {
+                target.put("enchantments." + entry.getKey().toString().toLowerCase(), entry.getValue());
+            }
+        }
+        return target;
     }
 
     /**
