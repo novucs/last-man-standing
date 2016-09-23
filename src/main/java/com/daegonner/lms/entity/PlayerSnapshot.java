@@ -57,6 +57,6 @@ public class PlayerSnapshot {
         player.getInventory().clear();
         player.getInventory().setContents(items);
         player.teleport(location);
-        player.setGameMode(GameMode.SURVIVAL);
+        player.setGameMode(gameMode);
     }
 }
