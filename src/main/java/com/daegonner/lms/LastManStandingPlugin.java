@@ -1,12 +1,16 @@
 package com.daegonner.lms;
 
 import com.daegonner.lms.model.*;
+import com.daegonner.lms.settings.Settings;
 import com.google.common.collect.ImmutableList;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import javax.persistence.PersistenceException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
 public class LastManStandingPlugin extends JavaPlugin {
 
@@ -19,12 +23,49 @@ public class LastManStandingPlugin extends JavaPlugin {
             ArenaSpawnModel.class
     );
 
+    private final Settings settings = new Settings(this);
     private final ArenaManager arenaManager = new ArenaManager(this);
+
+    public Settings getSettings() {
+        return settings;
+    }
+
+    public ArenaManager getArenaManager() {
+        return arenaManager;
+    }
 
     @Override
     public void onEnable() {
+        if (setupSettings())
+            return;
+
         setupDatabase();
         arenaManager.setup();
+    }
+
+    /**
+     * Performs the settings setup process.
+     *
+     * @return {@code true} if the process encountered an error.
+     */
+    private boolean setupSettings() {
+        try {
+            settings.load();
+        } catch (IOException | InvalidConfigurationException e) {
+            getLogger().log(Level.SEVERE, "===============");
+            getLogger().log(Level.SEVERE, "");
+            getLogger().log(Level.SEVERE, "There was an issue with loading the configuration!");
+            getLogger().log(Level.SEVERE, "Check the stack trace below to diagnose the problem.");
+            getLogger().log(Level.SEVERE, "The issue is most likely due to incorrect syntax.");
+            getLogger().log(Level.SEVERE, "");
+            getLogger().log(Level.SEVERE, "===============");
+            getLogger().log(Level.SEVERE, "Error stack trace: ", e);
+            getLogger().log(Level.SEVERE, "Please correct this issue before plugin use.");
+            getLogger().log(Level.SEVERE, "Disabling plugin . . .");
+            getServer().getPluginManager().disablePlugin(this);
+            return true;
+        }
+        return false;
     }
 
     private void setupDatabase() {

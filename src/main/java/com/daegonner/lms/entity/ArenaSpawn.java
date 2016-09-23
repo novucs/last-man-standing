@@ -1,5 +1,6 @@
 package com.daegonner.lms.entity;
 
+import org.bukkit.Location;
 import org.bukkit.World;
 
 import java.util.Objects;
@@ -77,6 +78,15 @@ public class ArenaSpawn {
      */
     public float getPitch() {
         return pitch;
+    }
+
+    /**
+     * Gets the arena spawn as a {@link Location}.
+     *
+     * @return the new location.
+     */
+    public Location toLocation() {
+        return new Location(world, x, y, z, yaw, pitch);
     }
 
     @Override

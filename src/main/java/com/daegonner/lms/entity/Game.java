@@ -1,10 +1,11 @@
 package com.daegonner.lms.entity;
 
+import com.daegonner.lms.settings.ArenaSettings;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Contains all data for an active LMS game.
@@ -14,6 +15,7 @@ public class Game {
     private final Arena arena;
     private final Set<Player> participants;
     private final Set<Player> spectators = new HashSet<>();
+    private final Map<Player, ItemStack[]> inventories = new HashMap<>();
 
     public Game(Arena arena, Set<Player> participants) {
         this.arena = arena;
@@ -47,6 +49,68 @@ public class Game {
         return spectators;
     }
 
+    /**
+     * Gets the stored inventories for recovery on death or game end.
+     *
+     * @return the inventories.
+     */
+    public Map<Player, ItemStack[]> getInventories() {
+        return inventories;
+    }
+
+    /**
+     * Initializes the games state, managing player locations and inventories.
+     *
+     * @param settings the settings for this specific arena.
+     */
+    public void start(ArenaSettings settings) {
+        storeInventories();
+        teleportParticipants();
+        loadKits(settings);
+    }
+
+    /**
+     * Stores the inventory of every participant in the game.
+     */
+    private void storeInventories() {
+        participants.forEach(this::storeInventory);
+    }
+
+    /**
+     * Stores a players inventory.
+     *
+     * @param player the player.
+     */
+    private void storeInventory(Player player) {
+        inventories.put(player, player.getInventory().getContents());
+    }
+
+    /**
+     * Teleports all participants to the arena.
+     */
+    private void teleportParticipants() {
+        for (Player player : participants) {
+            player.teleport(arena.getRandomSpawn());
+        }
+    }
+
+    /**
+     * Loads all player kits.
+     *
+     * @param settings the arena specific settings.
+     */
+    private void loadKits(ArenaSettings settings) {
+        ItemStack[] contents = settings.getInventory().toArray(new ItemStack[settings.getInventory().size()]);
+        for (Player player : participants) {
+            PlayerInventory inventory = player.getInventory();
+            inventory.setContents(contents);
+            inventory.setHelmet(settings.getHeadArmour());
+            inventory.setChestplate(settings.getBodyArmour());
+            inventory.setLeggings(settings.getLegArmour());
+            inventory.setBoots(settings.getLegArmour());
+        }
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -54,12 +118,13 @@ public class Game {
         Game game = (Game) o;
         return Objects.equals(arena, game.arena) &&
                 Objects.equals(participants, game.participants) &&
-                Objects.equals(spectators, game.spectators);
+                Objects.equals(spectators, game.spectators) &&
+                Objects.equals(inventories, game.inventories);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(arena, participants, spectators);
+        return Objects.hash(arena, participants, spectators, inventories);
     }
 
     @Override
@@ -68,6 +133,7 @@ public class Game {
                 "arena=" + arena +
                 ", participants=" + participants +
                 ", spectators=" + spectators +
+                ", inventories=" + inventories +
                 '}';
     }
 }

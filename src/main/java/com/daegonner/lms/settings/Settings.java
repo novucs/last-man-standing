@@ -22,12 +22,15 @@ public class Settings {
     private File configFile;
 
     private String lobbyStartMessage;
-    private String lobbyAnnounceMessage;
+    private String lobbyCountdownMessage;
     private String gameTeleportedMessage;
     private String gameWarmupMessage;
 
+    private int lobbyStart;
+    private int lobbyCountdown;
     private List<Integer> announcementTimes;
 
+    private ArenaSettings defaultArenaSettings;
     private Map<String, ArenaSettings> arenaSettingsMap;
 
     public static int getLatestVersion() {
@@ -50,8 +53,8 @@ public class Settings {
         return lobbyStartMessage;
     }
 
-    public String getLobbyAnnounceMessage() {
-        return lobbyAnnounceMessage;
+    public String getLobbyCountdownMessage() {
+        return lobbyCountdownMessage;
     }
 
     public String getGameTeleportedMessage() {
@@ -62,13 +65,20 @@ public class Settings {
         return gameWarmupMessage;
     }
 
+    public int getLobbyStart() {
+        return lobbyStart;
+    }
+
+    public int getLobbyCountdown() {
+        return lobbyCountdown;
+    }
+
     public List<Integer> getAnnouncementTimes() {
         return announcementTimes;
     }
 
     public ArenaSettings getArenaSettings(String arenaName) {
-        // TODO: Return default arena settings here if none exists currently.
-        return null;
+        return arenaSettingsMap.getOrDefault(arenaName, defaultArenaSettings);
     }
 
     public Settings(LastManStandingPlugin plugin) {
@@ -145,13 +155,23 @@ public class Settings {
         config.load(configFile);
 
         lobbyStartMessage = format(getString("messages.lobby-start", "&eLMS lobby is now available to join! &d/lms join"));
-        lobbyAnnounceMessage = format(getString("messages.lobby-announce", "&eLMS will start in &d{time}&e. Join with: &d/lms join"));
+        lobbyCountdownMessage = format(getString("messages.lobby-countdown", "&eLMS will start in &d{time}&e. Join with: &d/lms join"));
         gameTeleportedMessage = format(getString("messages.game-teleported", "&eYou have been teleported into LMS"));
         gameWarmupMessage = format(getString("messages.game-warmup", "&eProtection ends in &d{time}"));
 
+        lobbyStart = getInt("settings.lobby-start", 10800);
+        lobbyCountdown = getInt("settings.lobby-countdown", 300);
         announcementTimes = getList("settings.announcement-times",
                 Arrays.asList(1, 2, 3, 4, 5, 10, 30, 60, 120, 300, 600, 900, 1800), Integer.class);
         Collections.sort(announcementTimes);
+
+        for (String arenaName : config.getConfigurationSection("arena-settings").getKeys(false)) {
+            arenaSettingsMap.put(arenaName, new ArenaSettings(config, arenaName));
+        }
+
+        defaultArenaSettings = arenaSettingsMap.getOrDefault("default", new ArenaSettings(config, "default"));
+        defaultArenaSettings.load();
+        arenaSettingsMap.values().forEach(ArenaSettings::load);
 
         // Load all configuration values into memory.
         int version = getInt("config-version", 0);

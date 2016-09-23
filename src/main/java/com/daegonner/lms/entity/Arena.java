@@ -1,8 +1,11 @@
 package com.daegonner.lms.entity;
 
+import org.bukkit.Location;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * A named region in which an LMS {@link Game} can be hosted.
@@ -52,6 +55,15 @@ public class Arena {
      */
     public void setName(String name) {
         this.name = name;
+    }
+
+    /**
+     * Gets a random spawn location.
+     *
+     * @return the random spawn.
+     */
+    public Location getRandomSpawn() {
+        return spawns.get(ThreadLocalRandom.current().nextInt(spawns.size())).toLocation();
     }
 
     @Override

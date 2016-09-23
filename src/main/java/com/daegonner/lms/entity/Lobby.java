@@ -30,6 +30,23 @@ public class Lobby {
         return arenaVotes;
     }
 
+    /**
+     * Gets the highest voted arena.
+     *
+     * @return the arena.
+     */
+    public Arena getHighestVotedArena() {
+        int voteCount = 0;
+        Arena arena = null;
+        for (Map.Entry<Arena, Integer> entry : arenaVotes.entrySet()) {
+            if (entry.getValue() > voteCount) {
+                voteCount = entry.getValue();
+                arena = entry.getKey();
+            }
+        }
+        return arena;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
