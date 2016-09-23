@@ -12,6 +12,7 @@ settings:
 arena-settings:
   default:
     disable-hunger: true
+    min-players: 2
     kill-money:
       min: 2000
       max: 5000

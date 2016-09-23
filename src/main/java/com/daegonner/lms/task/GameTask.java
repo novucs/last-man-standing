@@ -4,6 +4,7 @@ import com.daegonner.lms.LastManStandingPlugin;
 import com.daegonner.lms.entity.Arena;
 import com.daegonner.lms.entity.Game;
 import com.daegonner.lms.entity.Lobby;
+import com.daegonner.lms.settings.ArenaSettings;
 import com.daegonner.lms.util.DurationUtils;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -100,16 +101,18 @@ public class GameTask extends BukkitRunnable {
      * Attempts to start a new game for the active lobby.
      */
     private void startGame() {
-        if (lobby.getPlayerQueue().size() < 2) {
+        Arena arena = lobby.getHighestVotedArena();
+        ArenaSettings settings = plugin.getSettings().getArenaSettings(arena.getName());
+
+        if (lobby.getPlayerQueue().size() < settings.getMinPlayers()) {
             broadcast(plugin.getSettings().getLobbyFailedPlayersMessage());
             lobby = null;
             return;
         }
 
-        Arena arena = lobby.getHighestVotedArena();
         game = new Game(arena, lobby.getPlayerQueue());
         lobby = null;
-        game.start(plugin.getSettings().getArenaSettings(arena.getName()));
+        game.start(settings);
         broadcast(plugin.getSettings().getGameTeleportedMessage());
     }
 

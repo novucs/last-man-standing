@@ -86,6 +86,7 @@ public class ArenaSettings {
     private final String arenaName;
 
     private boolean disableHunger;
+    private int minPlayers;
     private double killMoneyMax;
     private double killMoneyMin;
     private List<Reward> rewards;
@@ -106,6 +107,10 @@ public class ArenaSettings {
 
     public String getArenaName() {
         return arenaName;
+    }
+
+    public int getMinPlayers() {
+        return minPlayers;
     }
 
     public boolean isDisableHunger() {
@@ -151,6 +156,13 @@ public class ArenaSettings {
         return config.getBoolean(curPath, config.getBoolean(defPath));
     }
 
+    private int getInt(String path, int def) {
+        String defPath = "arena-settings.default." + path;
+        String curPath = "arena-settings." + arenaName + "." + path;
+        config.addDefault(defPath, def);
+        return config.getInt(curPath, config.getInt(defPath));
+    }
+
     private double getDouble(String path, double def) {
         String defPath = "arena-settings.default." + path;
         String curPath = "arena-settings." + arenaName + "." + path;
@@ -188,6 +200,7 @@ public class ArenaSettings {
 
     public void load() {
         disableHunger = getBoolean("disable-hunger", true);
+        minPlayers = getInt("min-players", 2);
         killMoneyMax = getDouble("kill-money.max", -1);
         killMoneyMin = getDouble("kill-money.min", -1);
         rewards = loadRewards("rewards", DEFAULT_REWARDS);
