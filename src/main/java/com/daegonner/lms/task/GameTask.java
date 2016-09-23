@@ -100,6 +100,12 @@ public class GameTask extends BukkitRunnable {
      * Attempts to start a new game for the active lobby.
      */
     private void startGame() {
+        if (lobby.getPlayerQueue().size() < 2) {
+            broadcast(plugin.getSettings().getLobbyFailedPlayersMessage());
+            lobby = null;
+            return;
+        }
+
         Arena arena = lobby.getHighestVotedArena();
         game = new Game(arena, lobby.getPlayerQueue());
         lobby = null;

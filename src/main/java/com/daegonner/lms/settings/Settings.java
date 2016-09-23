@@ -23,6 +23,7 @@ public class Settings {
 
     private String lobbyStartMessage;
     private String lobbyCountdownMessage;
+    private String lobbyFailedPlayersMessage;
     private String gameTeleportedMessage;
     private String gameWarmupMessage;
 
@@ -55,6 +56,10 @@ public class Settings {
 
     public String getLobbyCountdownMessage() {
         return lobbyCountdownMessage;
+    }
+
+    public String getLobbyFailedPlayersMessage() {
+        return lobbyFailedPlayersMessage;
     }
 
     public String getGameTeleportedMessage() {
@@ -156,6 +161,7 @@ public class Settings {
 
         lobbyStartMessage = format(getString("messages.lobby-start", "&eLMS lobby is now available to join! &d/lms join"));
         lobbyCountdownMessage = format(getString("messages.lobby-countdown", "&eLMS will start in &d{time}&e. Join with: &d/lms join"));
+        lobbyFailedPlayersMessage = format(getString("messages.lobby-failed-players", "&eLMS unable to start due to too low player interest"));
         gameTeleportedMessage = format(getString("messages.game-teleported", "&eYou have been teleported into LMS"));
         gameWarmupMessage = format(getString("messages.game-warmup", "&eProtection ends in &d{time}"));
 
