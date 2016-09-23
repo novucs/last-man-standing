@@ -1,6 +1,7 @@
 package com.daegonner.lms.settings;
 
 import com.daegonner.lms.LastManStandingPlugin;
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -8,9 +9,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Settings {
@@ -132,6 +131,10 @@ public class Settings {
         return toCast.stream().map(type::cast).collect(Collectors.toList());
     }
 
+    private String format(String msg) {
+        return ChatColor.translateAlternateColorCodes('&', msg);
+    }
+
     public void load() throws IOException, InvalidConfigurationException {
         // Create then load the configuration and file.
         configFile = new File(plugin.getDataFolder() + File.separator + "config.yml");
@@ -140,6 +143,15 @@ public class Settings {
 
         config = new YamlConfiguration();
         config.load(configFile);
+
+        lobbyStartMessage = format(getString("messages.lobby-start", "&eLMS lobby is now available to join! &d/lms join"));
+        lobbyAnnounceMessage = format(getString("messages.lobby-announce", "&eLMS will start in &d{time}&e. Join with: &d/lms join"));
+        gameTeleportedMessage = format(getString("messages.game-teleported", "&eYou have been teleported into LMS"));
+        gameWarmupMessage = format(getString("messages.game-warmup", "&eProtection ends in &d{time}"));
+
+        announcementTimes = getList("settings.announcement-times",
+                Arrays.asList(1, 2, 3, 4, 5, 10, 30, 60, 120, 300, 600, 900, 1800), Integer.class);
+        Collections.sort(announcementTimes);
 
         // Load all configuration values into memory.
         int version = getInt("config-version", 0);
