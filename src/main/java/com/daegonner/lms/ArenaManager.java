@@ -7,8 +7,9 @@ import com.daegonner.lms.entity.Region;
 import com.daegonner.lms.model.*;
 import org.bukkit.World;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
@@ -19,7 +20,7 @@ import java.util.stream.Collectors;
 public class ArenaManager {
 
     private final LastManStandingPlugin plugin;
-    private final List<Arena> arenas = new ArrayList<>();
+    private final Map<String, Arena> arenas = new HashMap<>();
     private boolean initialized = false;
 
     public ArenaManager(LastManStandingPlugin plugin) {
@@ -30,7 +31,7 @@ public class ArenaManager {
         return plugin;
     }
 
-    public List<Arena> getArenas() {
+    public Map<String, Arena> getArenas() {
         return arenas;
     }
 
@@ -40,7 +41,13 @@ public class ArenaManager {
      * @return the arena.
      */
     public Arena getRandomArena() {
-        return arenas.get(ThreadLocalRandom.current().nextInt(arenas.size()));
+        int rand = ThreadLocalRandom.current().nextInt(arenas.values().size());
+        for (Arena arena : arenas.values()) {
+            if (--rand <= 0) {
+                return arena;
+            }
+        }
+        return null;
     }
 
     /**
@@ -67,11 +74,13 @@ public class ArenaManager {
                 .fetch("spawns.entityPos.world")
                 .findList();
 
-        // Parse all arena models and add to the arena list.
-        arenas.addAll(fetched.stream()
-                .map(this::parseArena)
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList()));
+        // Parse all arena models and add to the arena map.
+        for (ArenaModel model : fetched) {
+            Arena arena = parseArena(model);
+            if (arena != null) {
+                arenas.put(arena.getName(), arena);
+            }
+        }
 
         // Change the state.
         initialized = true;
