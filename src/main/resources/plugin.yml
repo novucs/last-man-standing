@@ -3,3 +3,56 @@ main: ${project.groupId}.${project.artifactId}.${project.name}Plugin
 version: ${project.version}
 author: novucs
 database: true
+
+commands:
+  lms:
+    aliases: [lastmanstanding]
+    description: Core command for LMS.
+
+permissions:
+  lms.user:
+    default: true
+    children:
+      lms.join: true
+      lms.quit: true
+      lms.spectate: true
+      lms.list: true
+      lms.info: true
+      lms.vote: true
+
+  lms.admin:
+    default: op
+    children:
+      lms.user: true
+      lms.start: true
+      lms.stop: true
+      lms.reload: true
+      lms.create: true
+      lms.delete: true
+      lms.rename: true
+      lms.schedule: true
+      lms.setarea: true
+      lms.addspawn: true
+      lms.delspawn: true
+
+  lms.*:
+    default: false
+    children:
+      lms.admin: true
+
+  lms.join: {default: false}
+  lms.quit: {default: false}
+  lms.spectate: {default: false}
+  lms.list: {default: false}
+  lms.info: {default: false}
+  lms.vote: {default: false}
+  lms.start: {default: false}
+  lms.stop: {default: false}
+  lms.reload: {default: false}
+  lms.create: {default: false}
+  lms.delete: {default: false}
+  lms.rename: {default: false}
+  lms.schedule: {default: false}
+  lms.setarea: {default: false}
+  lms.addspawn: {default: false}
+  lms.delspawn: {default: false}
