@@ -82,7 +82,7 @@ public class PotionFactory extends ItemFactory {
     public ItemStack forceCreate() {
         ItemStack item = super.forceCreate();
         PotionMeta meta = (PotionMeta) item.getItemMeta();
-        PotionData data = new PotionData(potionType, upgraded, extended);
+        PotionData data = new PotionData(potionType, extended, upgraded);
         meta.setBasePotionData(data);
         item.setItemMeta(meta);
         return item;
