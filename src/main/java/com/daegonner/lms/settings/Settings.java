@@ -171,7 +171,7 @@ public class Settings {
                 Arrays.asList(1, 2, 3, 4, 5, 10, 30, 60, 120, 300, 600, 900, 1800), Integer.class);
         Collections.sort(announcementTimes);
 
-        for (String arenaName : config.getConfigurationSection("arena-settings").getKeys(false)) {
+        for (String arenaName : getOrCreateSection("arena-settings").getKeys(false)) {
             arenaSettingsMap.put(arenaName, new ArenaSettings(config, arenaName));
         }
 
