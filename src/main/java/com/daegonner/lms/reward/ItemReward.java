@@ -2,6 +2,7 @@ package com.daegonner.lms.reward;
 
 import com.daegonner.lms.util.ItemFactory;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Chest;
 import org.bukkit.block.DoubleChest;
 import org.bukkit.enchantments.Enchantment;
@@ -60,15 +61,37 @@ public class ItemReward implements Reward {
     public Map<String, Object> serialize() {
         Map<String, Object> target = new HashMap<>();
         target.put("type", RewardType.ITEM.name().toLowerCase());
-        target.put("material", itemFactory.getMaterial());
-        target.put("data", itemFactory.getData());
-        target.put("amount.max", itemFactory.getMax());
-        target.put("amount.min", itemFactory.getMin());
-        target.put("name", itemFactory.getName());
-        target.put("lore", itemFactory.getLore());
-        for (Map.Entry<Enchantment, Integer> entry : itemFactory.getEnchantments().entrySet()) {
-            target.put("enchantments." + entry.getKey().toString().toLowerCase(), entry.getValue());
+
+        if (itemFactory.getMaterial() != Material.AIR) {
+            target.put("material", itemFactory.getMaterial().name().toLowerCase());
         }
+
+        if (itemFactory.getData() != 0) {
+            target.put("data", itemFactory.getData());
+        }
+
+        if (itemFactory.getMax() > -1) {
+            target.put("amount.max", itemFactory.getMax());
+        }
+
+        if (itemFactory.getMin() != 0) {
+            target.put("amount.min", itemFactory.getMin());
+        }
+
+        if (itemFactory.getName() != null) {
+            target.put("name", itemFactory.getName());
+        }
+
+        if (itemFactory.getLore() != null) {
+            target.put("lore", itemFactory.getLore());
+        }
+
+        if (itemFactory.getEnchantments().isEmpty()) {
+            for (Map.Entry<Enchantment, Integer> entry : itemFactory.getEnchantments().entrySet()) {
+                target.put("enchantments." + entry.getKey().getName().toLowerCase(), entry.getValue());
+            }
+        }
+
         return target;
     }
 }

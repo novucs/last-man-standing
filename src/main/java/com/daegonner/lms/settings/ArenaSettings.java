@@ -278,14 +278,32 @@ public class ArenaSettings {
 
     private Map<String, Object> serializeItem(ItemStack item) {
         Map<String, Object> target = new HashMap<>();
-        target.put("material", item.getType().toString().toLowerCase());
-        target.put("data", item.getDurability());
-        target.put("amount", item.getAmount());
-        target.put("name", item.getItemMeta().getDisplayName());
-        target.put("lore", item.getItemMeta().getLore());
-        for (Map.Entry<Enchantment, Integer> entry : item.getItemMeta().getEnchants().entrySet()) {
-            target.put("enchantments." + entry.getKey().toString().toLowerCase(), entry.getValue());
+        if (item.getType() != Material.AIR) {
+            target.put("material", item.getType().name().toLowerCase());
         }
+
+        if (item.getDurability() != 0) {
+            target.put("data", item.getDurability());
+        }
+
+        if (item.getAmount() != 1) {
+            target.put("amount", item.getAmount());
+        }
+
+        if (item.getItemMeta().getDisplayName() != null) {
+            target.put("name", item.getItemMeta().getDisplayName());
+        }
+
+        if (item.getItemMeta().getLore() != null) {
+            target.put("lore", item.getItemMeta().getLore());
+        }
+
+        if (!item.getEnchantments().isEmpty()) {
+            for (Map.Entry<Enchantment, Integer> entry : item.getItemMeta().getEnchants().entrySet()) {
+                target.put("enchantments." + entry.getKey().getName().toLowerCase(), entry.getValue());
+            }
+        }
+
         return target;
     }
 

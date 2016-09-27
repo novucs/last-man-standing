@@ -159,6 +159,9 @@ public class Settings {
         config = new YamlConfiguration();
         config.load(configFile);
 
+        // Load all configuration values into memory.
+        int version = getInt("config-version", 0);
+
         lobbyStartMessage = format(getString("messages.lobby-start", "&eLMS lobby is now available to join! &d/lms join"));
         lobbyCountdownMessage = format(getString("messages.lobby-countdown", "&eLMS will start in &d{time}&e. Join with: &d/lms join"));
         lobbyFailedPlayersMessage = format(getString("messages.lobby-failed-players", "&eLMS unable to start due to too low player interest"));
@@ -184,9 +187,6 @@ public class Settings {
         });
         defaultArenaSettings.load();
         arenaSettingsMap.values().forEach(ArenaSettings::load);
-
-        // Load all configuration values into memory.
-        int version = getInt("config-version", 0);
 
         // Update the configuration file if it is outdated.
         if (version < LATEST_VERSION) {
