@@ -7,10 +7,7 @@ import com.daegonner.lms.entity.Region;
 import com.daegonner.lms.model.*;
 import org.bukkit.World;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
@@ -40,14 +37,19 @@ public class ArenaManager {
      *
      * @return the arena.
      */
-    public Arena getRandomArena() {
+    public Optional<Arena> getRandomArena() {
+        if (arenas.isEmpty()) {
+            return Optional.empty();
+        }
+
         int rand = ThreadLocalRandom.current().nextInt(arenas.values().size());
         for (Arena arena : arenas.values()) {
             if (--rand <= 0) {
-                return arena;
+                return Optional.of(arena);
             }
         }
-        return null;
+
+        return Optional.empty();
     }
 
     /**

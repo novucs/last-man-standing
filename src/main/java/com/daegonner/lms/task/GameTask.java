@@ -8,6 +8,7 @@ import com.daegonner.lms.settings.ArenaSettings;
 import com.daegonner.lms.util.DurationUtils;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 public class GameTask extends BukkitRunnable {
@@ -34,6 +35,13 @@ public class GameTask extends BukkitRunnable {
     public void run() {
         if (hasGame()) {
             game.pulse();
+            return;
+        }
+
+        if (plugin.getArenaManager().getArenas().isEmpty()) {
+            if (hasLobby()) {
+                closeLobby();
+            }
             return;
         }
 
@@ -89,6 +97,14 @@ public class GameTask extends BukkitRunnable {
     }
 
     /**
+     * Closes the current lobby.
+     */
+    private void closeLobby() {
+        lobby = null;
+        broadcast(plugin.getSettings().getLobbyCancelled());
+    }
+
+    /**
      * Checks if the current lobby countdown is finished.
      *
      * @return {@code true} if the countdown is finished.
@@ -101,8 +117,15 @@ public class GameTask extends BukkitRunnable {
      * Attempts to start a new game for the active lobby.
      */
     private void startGame() {
-        Arena arena = lobby.getHighestVotedArena().orElse(plugin.getArenaManager().getRandomArena());
-        ArenaSettings settings = plugin.getSettings().getArenaSettings(arena.getName());
+        Optional<Arena> arena = lobby.getHighestVotedArena();
+        if (!arena.isPresent()) {
+            arena = plugin.getArenaManager().getRandomArena();
+            if (!arena.isPresent()) {
+                return;
+            }
+        }
+
+        ArenaSettings settings = plugin.getSettings().getArenaSettings(arena.get().getName());
 
         if (lobby.getPlayerQueue().size() < settings.getMinPlayers()) {
             broadcast(plugin.getSettings().getLobbyFailedPlayersMessage());
@@ -110,7 +133,7 @@ public class GameTask extends BukkitRunnable {
             return;
         }
 
-        game = new Game(arena, lobby.getPlayerQueue());
+        game = new Game(arena.get(), lobby.getPlayerQueue());
         lobby = null;
         game.start(settings);
         broadcast(plugin.getSettings().getGameTeleportedMessage());
