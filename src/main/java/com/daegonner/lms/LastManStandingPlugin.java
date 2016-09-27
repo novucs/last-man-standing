@@ -155,7 +155,7 @@ public class LastManStandingPlugin extends JavaPlugin {
         } catch (InvalidUsageException e) {
 
             // Invalid command usage should not be harmful. Print something friendly.
-            sender.sendMessage(DARK_AQUA + e.getSimpleUsageString(isConsole ? "" : "/"));
+            sender.sendMessage(DARK_AQUA + e.getSimpleUsageString((isConsole ? "" : "/") + "lms "));
             sender.sendMessage(DARK_RED + "Error: " + RED + e.getMessage());
 
         } catch (AuthorizationException e) {
