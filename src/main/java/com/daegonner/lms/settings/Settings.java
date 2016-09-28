@@ -33,6 +33,7 @@ public class Settings {
     private String gameWarmupMessage;
     private String gameCancelledMessage;
     private String gameCompleteMessage;
+    private String gameRunningMessage;
     private String playerOnlyCommandMessage;
     private String invalidSelectionMessage;
     private String arenaAlreadyExistsMessage;
@@ -119,6 +120,10 @@ public class Settings {
 
     public String getGameCompleteMessage() {
         return gameCompleteMessage;
+    }
+
+    public String getGameRunningMessage() {
+        return gameRunningMessage;
     }
 
     public String getPlayerOnlyCommandMessage() {
@@ -289,6 +294,7 @@ public class Settings {
         gameWarmupMessage = format(getString("messages.game-warmup", "&eProtection ends in &d{time}"));
         gameCancelledMessage = format(getString("messages.game-cancelled", "&eLMS has been cancelled"));
         gameCompleteMessage = format(getString("messages.game-complete", "&d{player}&e has won the LMS!"));
+        gameRunningMessage = format(getString("messages.game-running", "&cA game is already in progress"));
         playerOnlyCommandMessage = format(getString("messages.player-only-command", "&cThis command can only be executed by players"));
         invalidSelectionMessage = format(getString("messages.invalid-selection", "&cPlease create a valid cuboid selection with WorldEdit"));
         arenaAlreadyExistsMessage = format(getString("messages.arena-already-exists", "&cAn arena by that name already exists"));

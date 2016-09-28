@@ -108,7 +108,7 @@ public class GameTask extends BukkitRunnable {
     /**
      * Creates a new lobby.
      */
-    private void createLobby() {
+    public void createLobby() {
         lobby = new Lobby();
         lobbyStart = System.currentTimeMillis();
         nextLobby = System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(plugin.getSettings().getLobbyStart());

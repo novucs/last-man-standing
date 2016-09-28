@@ -27,6 +27,12 @@ public class AdminCommands {
     @Command(aliases = "start", desc = "Start an LMS event")
     @Require("lms.start")
     public void start(CommandSender sender) {
+        if (plugin.getGameTask().hasLobby() || plugin.getGameTask().hasLobby()) {
+            sender.sendMessage(plugin.getSettings().getGameRunningMessage());
+            return;
+        }
+
+        plugin.getGameTask().createLobby();
     }
 
     @Command(aliases = "stop", desc = "Stop an LMS event")
