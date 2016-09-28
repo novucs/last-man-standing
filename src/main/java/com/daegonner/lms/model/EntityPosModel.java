@@ -2,6 +2,7 @@ package com.daegonner.lms.model;
 
 import com.avaje.ebean.validation.NotNull;
 import com.daegonner.lms.LastManStandingPlugin;
+import com.daegonner.lms.entity.ArenaSpawn;
 import org.bukkit.Location;
 
 import javax.persistence.*;
@@ -168,28 +169,33 @@ public class EntityPosModel implements Model {
      * Gets or creates a new {@link EntityPosModel} from the LMS database.
      *
      * @param plugin the {@link LastManStandingPlugin} plugin instance.
-     * @param world  the world.
-     * @param x      the X coordinate.
-     * @param y      the Y coordinate.
-     * @param z      the Z coordinate.
-     * @param yaw    the yaw.
-     * @param pitch  the pitch.
+     * @param spawn  the {@link ArenaSpawn}.
      * @return the entity position using these coordinates.
      */
-    public static EntityPosModel of(LastManStandingPlugin plugin, WorldModel world, double x, double y, double z,
-                                     float yaw, float pitch) {
-        EntityPosModel model = plugin.getDatabase().find(EntityPosModel.class).where()
-                .eq("world", world).eq("x", x).eq("y", y).eq("z", z).eq("yaw", yaw).eq("pitch", pitch).findUnique();
+    public static EntityPosModel of(LastManStandingPlugin plugin, ArenaSpawn spawn) {
+        WorldModel world = WorldModel.of(plugin, spawn.getWorld());
+        EntityPosModel model = plugin.getDatabase()
+                .find(EntityPosModel.class)
+                .where()
+                .eq("world", world)
+                .eq("x", spawn.getX())
+                .eq("y", spawn.getY())
+                .eq("z", spawn.getZ())
+                .eq("yaw", spawn.getYaw())
+                .eq("pitch", spawn.getPitch())
+                .findUnique();
+
         if (model == null) {
             model = new EntityPosModel();
             model.setWorld(world);
-            model.setX(x);
-            model.setY(y);
-            model.setZ(z);
-            model.setYaw(yaw);
-            model.setPitch(pitch);
+            model.setX(spawn.getX());
+            model.setY(spawn.getY());
+            model.setZ(spawn.getZ());
+            model.setYaw(spawn.getYaw());
+            model.setPitch(spawn.getPitch());
             plugin.getDatabase().save(model);
         }
+
         return model;
     }
 

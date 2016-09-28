@@ -34,6 +34,7 @@ public class BlockPosModel implements Model {
 
     /**
      * Gets the id.
+     *
      * @return the id.
      */
     public int getId() {
@@ -42,6 +43,7 @@ public class BlockPosModel implements Model {
 
     /**
      * Sets the id.
+     *
      * @param id the id.
      */
     public void setId(int id) {
@@ -50,6 +52,7 @@ public class BlockPosModel implements Model {
 
     /**
      * Gets the world.
+     *
      * @return the world.
      */
     public WorldModel getWorld() {
@@ -58,6 +61,7 @@ public class BlockPosModel implements Model {
 
     /**
      * Sets the world
+     *
      * @param world the world.
      */
     public void setWorld(WorldModel world) {
@@ -66,6 +70,7 @@ public class BlockPosModel implements Model {
 
     /**
      * Gets the X coordinate.
+     *
      * @return the X coordinate.
      */
     public int getX() {
@@ -74,6 +79,7 @@ public class BlockPosModel implements Model {
 
     /**
      * Sets the X coordinate.
+     *
      * @param x the X coordinate.
      */
     public void setX(int x) {
@@ -82,6 +88,7 @@ public class BlockPosModel implements Model {
 
     /**
      * Gets the Y coordinate.
+     *
      * @return the Y coordinate.
      */
     public int getY() {
@@ -90,6 +97,7 @@ public class BlockPosModel implements Model {
 
     /**
      * Sets the Y coordinate.
+     *
      * @param y the Y coordinate.
      */
     public void setY(int y) {
@@ -98,6 +106,7 @@ public class BlockPosModel implements Model {
 
     /**
      * Gets the Z coordinate.
+     *
      * @return the Z coordinate.
      */
     public int getZ() {
@@ -106,6 +115,7 @@ public class BlockPosModel implements Model {
 
     /**
      * Sets the Z coordinate.
+     *
      * @param z the Z coordinate.
      */
     public void setZ(int z) {
@@ -116,23 +126,29 @@ public class BlockPosModel implements Model {
      * Gets or creates a new {@link BlockPosModel} from the LMS database.
      *
      * @param plugin the {@link LastManStandingPlugin} plugin instance.
-     * @param world  the world.
-     * @param x      the X coordinate.
-     * @param y      the Y coordinate.
-     * @param z      the Z coordinate.
+     * @param pos    the {@link BlockPos} to find or create.
      * @return the block position using these coordinates.
      */
-    public static BlockPosModel of(LastManStandingPlugin plugin, WorldModel world, int x, int y, int z) {
-        BlockPosModel model = plugin.getDatabase().find(BlockPosModel.class).where()
-                .eq("world", world).eq("x", x).eq("y", y).eq("z", z).findUnique();
+    public static BlockPosModel of(LastManStandingPlugin plugin, BlockPos pos) {
+        WorldModel world = WorldModel.of(plugin, pos.getWorld().getName());
+        BlockPosModel model = plugin.getDatabase()
+                .find(BlockPosModel.class)
+                .where()
+                .eq("world", world)
+                .eq("x", pos.getX())
+                .eq("y", pos.getY())
+                .eq("z", pos.getZ())
+                .findUnique();
+
         if (model == null) {
             model = new BlockPosModel();
             model.setWorld(world);
-            model.setX(x);
-            model.setY(y);
-            model.setZ(z);
+            model.setX(pos.getX());
+            model.setY(pos.getY());
+            model.setZ(pos.getZ());
             plugin.getDatabase().save(model);
         }
+
         return model;
     }
 

@@ -79,12 +79,18 @@ public class WorldModel implements Model {
      * @return the matching instance, new if not already existing.
      */
     public static WorldModel of(LastManStandingPlugin plugin, String name) {
-        WorldModel model = plugin.getDatabase().find(WorldModel.class).where().eq("name", name).findUnique();
+        WorldModel model = plugin.getDatabase()
+                .find(WorldModel.class)
+                .where()
+                .eq("name", name)
+                .findUnique();
+
         if (model == null) {
             model = new WorldModel();
             model.setName(name);
             plugin.getDatabase().save(model);
         }
+
         return model;
     }
 

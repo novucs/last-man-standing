@@ -1,5 +1,6 @@
 package com.daegonner.lms.model;
 
+import com.daegonner.lms.LastManStandingPlugin;
 import com.daegonner.lms.entity.Region;
 
 import javax.persistence.*;
@@ -77,6 +78,33 @@ public class RegionModel implements Model {
      */
     public void setMax(BlockPosModel max) {
         this.max = max;
+    }
+
+    /**
+     * Gets or creates a new {@link RegionModel} from the database.
+     *
+     * @param plugin the {@link LastManStandingPlugin} plugin instance.
+     * @param region the {@link Region}.
+     * @return the region model with the same constraints.
+     */
+    public static RegionModel of(LastManStandingPlugin plugin, Region region) {
+        BlockPosModel max = BlockPosModel.of(plugin, region.getMax());
+        BlockPosModel min = BlockPosModel.of(plugin, region.getMin());
+        RegionModel model = plugin.getDatabase()
+                .find(RegionModel.class)
+                .where()
+                .eq("max", max)
+                .eq("min", min)
+                .findUnique();
+
+        if (model == null) {
+            model = new RegionModel();
+            model.setMax(max);
+            model.setMin(min);
+            plugin.getDatabase().save(model);
+        }
+
+        return model;
     }
 
     @Override

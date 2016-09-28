@@ -1,5 +1,9 @@
 package com.daegonner.lms.model;
 
+import com.daegonner.lms.LastManStandingPlugin;
+import com.daegonner.lms.entity.Arena;
+import com.daegonner.lms.entity.ArenaSpawn;
+
 import javax.persistence.*;
 import java.util.Objects;
 
@@ -75,6 +79,34 @@ public class ArenaSpawnModel implements Model {
      */
     public void setEntityPos(EntityPosModel entityPos) {
         this.entityPos = entityPos;
+    }
+
+    /**
+     * Gets or creates a new {@link ArenaSpawnModel} from the database.
+     *
+     * @param plugin the {@link LastManStandingPlugin} plugin instance.
+     * @param arena  the {@link Arena}.
+     * @param spawn  the {@link ArenaSpawn}.
+     * @return the arena spawn model of the same position and arena.
+     */
+    public static ArenaSpawnModel of(LastManStandingPlugin plugin, Arena arena, ArenaSpawn spawn) {
+        EntityPosModel entityPos = EntityPosModel.of(plugin, spawn);
+        ArenaModel arenaModel = ArenaModel.of(plugin, arena);
+        ArenaSpawnModel model = plugin.getDatabase()
+                .find(ArenaSpawnModel.class)
+                .where()
+                .eq("arena", arenaModel)
+                .eq("entityPos", entityPos)
+                .findUnique();
+
+        if (model == null) {
+            model = new ArenaSpawnModel();
+            model.setArena(arenaModel);
+            model.setEntityPos(entityPos);
+            plugin.getDatabase().save(model);
+        }
+
+        return model;
     }
 
     @Override

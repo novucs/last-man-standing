@@ -2,6 +2,7 @@ package com.daegonner.lms.model;
 
 import com.avaje.ebean.validation.Length;
 import com.avaje.ebean.validation.NotEmpty;
+import com.daegonner.lms.LastManStandingPlugin;
 import com.daegonner.lms.entity.Arena;
 
 import javax.persistence.*;
@@ -101,6 +102,31 @@ public class ArenaModel implements Model {
      */
     public void setSpawns(List<ArenaSpawnModel> spawns) {
         this.spawns = spawns;
+    }
+
+    /**
+     * Gets or creates a new {@link ArenaModel} from the database.
+     *
+     * @param plugin the {@link LastManStandingPlugin} plugin instance.
+     * @param arena  the {@link Arena}.
+     * @return the arena model of the same name.
+     */
+    public static ArenaModel of(LastManStandingPlugin plugin, Arena arena) {
+        ArenaModel model = plugin.getDatabase()
+                .find(ArenaModel.class)
+                .where()
+                .eq("name", arena.getName())
+                .findUnique();
+
+        if (model == null) {
+            RegionModel region = RegionModel.of(plugin, arena.getRegion());
+            model = new ArenaModel();
+            model.setName(arena.getName());
+            model.setRegion(region);
+            plugin.getDatabase().save(arena);
+        }
+
+        return model;
     }
 
     @Override
