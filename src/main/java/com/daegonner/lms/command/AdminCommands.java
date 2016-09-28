@@ -38,31 +38,40 @@ public class AdminCommands {
     @Command(aliases = "create", usage = "<name>", desc = "Create a new arena")
     @Require("lms.create")
     public void create(CommandSender sender, String name) {
+        // Disallow non players to create arenas.
         if (!(sender instanceof Player)) {
             sender.sendMessage(plugin.getSettings().getPlayerOnlyCommandMessage());
             return;
         }
 
+        // Disallow names above the maximum storage limit.
         if (name.length() > 30) {
             sender.sendMessage(plugin.getSettings().getArenaNameSizeMessage());
             return;
         }
 
+        // Get the players world edit selection.
         Player player = (Player) sender;
         WorldEditPlugin worldEdit = (WorldEditPlugin) plugin.getServer().getPluginManager().getPlugin("WorldEdit");
         Selection selection = worldEdit.getSelection(player);
 
+        // Disallow non-cuboid selections.
         if (selection == null || !(selection instanceof CuboidSelection)) {
             player.sendMessage(plugin.getSettings().getInvalidSelectionMessage());
             return;
         }
 
+        // Create the new arena locally.
         CuboidSelection cuboid = (CuboidSelection) selection;
         Region region = Region.create(cuboid.getMaximumPoint(), cuboid.getMinimumPoint());
         Arena arena = new Arena(name, region);
-        ArenaModel.of(plugin, arena);
         plugin.getArenaManager().getArenas().put(name.toLowerCase(), arena);
-        player.sendMessage(plugin.getSettings().getArenaCreatedMessage().replace("{name}", name));
+
+        // Save arena to the database and send confirmation message asynchronously.
+        plugin.getExecutorService().execute(() -> {
+            ArenaModel.of(plugin, arena);
+            player.sendMessage(plugin.getSettings().getArenaCreatedMessage().replace("{name}", name));
+        });
     }
 
     @Command(aliases = "delete", usage = "<arena>", desc = "Delete an arena")
@@ -73,17 +82,28 @@ public class AdminCommands {
     @Command(aliases = "rename", usage = "<arena> <name>", desc = "Rename an arena")
     @Require("lms.rename")
     public void rename(CommandSender sender, Arena arena, String name) {
+        // Disallow names above the maximum storage limit.
         if (name.length() > 30) {
             sender.sendMessage(plugin.getSettings().getArenaNameSizeMessage());
             return;
         }
+
+        // Remove the arena from the arena manager.
         plugin.getArenaManager().getArenas().remove(arena.getName().toLowerCase());
-        ArenaModel model = ArenaModel.of(plugin, arena);
-        model.setName(name);
-        plugin.getDatabase().save(model);
-        arena.setName(name);
-        plugin.getArenaManager().getArenas().put(arena.getName().toLowerCase(), arena);
-        sender.sendMessage(plugin.getSettings().getArenaRenamedMessage().replace("{name}", name));
+        plugin.getArenaManager().getArenas().put(name.toLowerCase(), arena);
+
+        // Save arena to the database asynchronously.
+        plugin.getExecutorService().execute(() -> {
+            ArenaModel model = ArenaModel.of(plugin, arena);
+            model.setName(name);
+            plugin.getDatabase().save(model);
+
+            // Modify the arena name and send confirmation message on the server thread.
+            plugin.getServer().getScheduler().runTask(plugin, () -> {
+                arena.setName(name);
+                sender.sendMessage(plugin.getSettings().getArenaRenamedMessage().replace("{name}", name));
+            });
+        });
     }
 
     @Command(aliases = "schedule", usage = "<seconds>", desc = "Schedule when the next lobby starts")

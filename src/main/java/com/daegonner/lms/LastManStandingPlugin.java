@@ -28,6 +28,8 @@ import javax.persistence.PersistenceException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.logging.Level;
 
 import static org.bukkit.ChatColor.*;
@@ -43,6 +45,7 @@ public class LastManStandingPlugin extends JavaPlugin {
             ArenaSpawnModel.class
     );
 
+    private final ExecutorService executorService = Executors.newSingleThreadExecutor();
     private final Settings settings = new Settings(this);
     private final ArenaManager arenaManager = new ArenaManager(this);
     private final GameTask gameTask = new GameTask(this);
@@ -50,6 +53,10 @@ public class LastManStandingPlugin extends JavaPlugin {
             new PlayerListener(this)
     );
     private Dispatcher dispatcher;
+
+    public ExecutorService getExecutorService() {
+        return executorService;
+    }
 
     public Settings getSettings() {
         return settings;
