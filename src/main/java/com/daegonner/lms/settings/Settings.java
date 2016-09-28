@@ -25,7 +25,9 @@ public class Settings {
     private String lobbyStartMessage;
     private String lobbyCountdownMessage;
     private String lobbyFailedPlayersMessage;
-    private String lobbyCancelled;
+    private String lobbyCancelledMessage;
+    private String lobbyNonExistentMessage;
+    private String lobbyJoinedMessage;
     private String gameTeleportedMessage;
     private String gameWarmupMessage;
     private String playerOnlyCommandMessage;
@@ -74,8 +76,16 @@ public class Settings {
         return lobbyFailedPlayersMessage;
     }
 
-    public String getLobbyCancelled() {
-        return lobbyCancelled;
+    public String getLobbyCancelledMessage() {
+        return lobbyCancelledMessage;
+    }
+
+    public String getLobbyNonExistentMessage() {
+        return lobbyNonExistentMessage;
+    }
+
+    public String getLobbyJoinedMessage() {
+        return lobbyJoinedMessage;
     }
 
     public String getGameTeleportedMessage() {
@@ -206,7 +216,9 @@ public class Settings {
         lobbyStartMessage = format(getString("messages.lobby-start", "&eLMS lobby is now available to join! &d/lms join"));
         lobbyCountdownMessage = format(getString("messages.lobby-countdown", "&eLMS will start in &d{time}&e. Join with: &d/lms join"));
         lobbyFailedPlayersMessage = format(getString("messages.lobby-failed-players", "&eLMS unable to start due to too low player interest"));
-        lobbyCancelled = format(getString("messages.lobby-cancelled", "&eLMS lobby has been cancelled."));
+        lobbyCancelledMessage = format(getString("messages.lobby-cancelled", "&eLMS lobby has been cancelled"));
+        lobbyNonExistentMessage = format(getString("messages.lobby-non-existent", "&cNo LMS lobby exists"));
+        lobbyJoinedMessage = format(getString("messages.lobby-joined", "&eSuccessfully joined the LMS lobby"));
         gameTeleportedMessage = format(getString("messages.game-teleported", "&eYou have been teleported into LMS"));
         gameWarmupMessage = format(getString("messages.game-warmup", "&eProtection ends in &d{time}"));
         playerOnlyCommandMessage = format(getString("messages.player-only-command", "&cThis command can only be executed by players"));

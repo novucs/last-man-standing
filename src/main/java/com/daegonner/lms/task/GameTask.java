@@ -101,7 +101,7 @@ public class GameTask extends BukkitRunnable {
      */
     private void closeLobby() {
         lobby = null;
-        broadcast(plugin.getSettings().getLobbyCancelled());
+        broadcast(plugin.getSettings().getLobbyCancelledMessage());
     }
 
     /**

@@ -6,6 +6,7 @@ import com.sk89q.intake.Command;
 import com.sk89q.intake.Require;
 import com.sk89q.intake.parametric.annotation.Optional;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 public class UserCommands {
 
@@ -18,6 +19,19 @@ public class UserCommands {
     @Command(aliases = "join", desc = "Join the lobby")
     @Require("lms.join")
     public void join(CommandSender sender) {
+        if (!(sender instanceof Player)) {
+            sender.sendMessage(plugin.getSettings().getPlayerOnlyCommandMessage());
+            return;
+        }
+
+        if (!plugin.getGameTask().hasLobby()) {
+            sender.sendMessage(plugin.getSettings().getLobbyNonExistentMessage());
+            return;
+        }
+
+        Player player = (Player) sender;
+        plugin.getGameTask().getLobby().getPlayerQueue().add(player);
+        player.sendMessage(plugin.getSettings().getLobbyJoinedMessage());
     }
 
     @Command(aliases = "quit", desc = "Quit the game")
