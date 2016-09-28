@@ -10,7 +10,7 @@ import java.util.*;
 public class Lobby {
 
     private final Set<Player> playerQueue = new HashSet<>();
-    private final Map<Arena, Integer> arenaVotes = new HashMap<>();
+    private final Map<Player, Arena> arenaVotes = new HashMap<>();
 
     /**
      * The current queue of players waiting for the game to start.
@@ -26,8 +26,17 @@ public class Lobby {
      *
      * @return the arena votes.
      */
-    public Map<Arena, Integer> getArenaVotes() {
+    public Map<Player, Arena> getArenaVotes() {
         return arenaVotes;
+    }
+
+    private Map<Arena, Integer> getVoteTotals() {
+        Map<Arena, Integer> target = new HashMap<>();
+        arenaVotes.forEach((player, arena) -> {
+            Integer count = target.getOrDefault(arena, 0);
+            target.put(arena, count + 1);
+        });
+        return target;
     }
 
     /**
@@ -38,7 +47,7 @@ public class Lobby {
     public Optional<Arena> getHighestVotedArena() {
         int voteCount = 0;
         Arena arena = null;
-        for (Map.Entry<Arena, Integer> entry : arenaVotes.entrySet()) {
+        for (Map.Entry<Arena, Integer> entry : getVoteTotals().entrySet()) {
             if (entry.getValue() > voteCount) {
                 voteCount = entry.getValue();
                 arena = entry.getKey();

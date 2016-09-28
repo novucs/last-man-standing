@@ -4,6 +4,7 @@ import com.daegonner.lms.LastManStandingPlugin;
 import com.daegonner.lms.entity.Arena;
 import com.daegonner.lms.entity.ArenaSpawn;
 import com.daegonner.lms.entity.Game;
+import com.daegonner.lms.entity.Lobby;
 import com.sk89q.intake.Command;
 import com.sk89q.intake.Require;
 import com.sk89q.intake.parametric.annotation.Optional;
@@ -151,6 +152,25 @@ public class UserCommands {
     @Command(aliases = "vote", desc = "Vote to play an arena while in lobby")
     @Require("lms.vote")
     public void vote(CommandSender sender, Arena arena) {
+        if (!(sender instanceof Player)) {
+            message(sender, plugin.getSettings().getPlayerOnlyCommandMessage());
+            return;
+        }
+
+        if (!plugin.getGameTask().hasLobby()) {
+            message(sender, plugin.getSettings().getLobbyNonExistentMessage());
+            return;
+        }
+
+        Player player = (Player) sender;
+        Lobby lobby = plugin.getGameTask().getLobby();
+
+        if (!lobby.getPlayerQueue().contains(player)) {
+            message(sender, plugin.getSettings().getLobbyNotJoinedMessage());
+            return;
+        }
+
+        lobby.getArenaVotes().put(player, arena);
     }
 
     private void message(CommandSender sender, String msg) {
