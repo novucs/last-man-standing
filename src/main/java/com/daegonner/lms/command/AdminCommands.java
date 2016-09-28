@@ -33,6 +33,8 @@ public class AdminCommands {
     @Command(aliases = "reload", desc = "Reload the configuration")
     @Require("lms.reload")
     public void reload(CommandSender sender) {
+        plugin.setupSettings();
+        sender.sendMessage(plugin.getSettings().getReloadMessage());
     }
 
     @Command(aliases = "create", usage = "<name>", desc = "Create a new arena")

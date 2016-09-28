@@ -21,6 +21,7 @@ public class Settings {
     private FileConfiguration config;
     private File configFile;
 
+    private String reloadMessage;
     private String lobbyStartMessage;
     private String lobbyCountdownMessage;
     private String lobbyFailedPlayersMessage;
@@ -55,6 +56,10 @@ public class Settings {
 
     public File getConfigFile() {
         return configFile;
+    }
+
+    public String getReloadMessage() {
+        return reloadMessage;
     }
 
     public String getLobbyStartMessage() {
@@ -197,6 +202,7 @@ public class Settings {
         // Load all configuration values into memory.
         int version = getInt("config-version", 0);
 
+        reloadMessage = format(getString("messages.reload", "&eSettings successfully reloaded"));
         lobbyStartMessage = format(getString("messages.lobby-start", "&eLMS lobby is now available to join! &d/lms join"));
         lobbyCountdownMessage = format(getString("messages.lobby-countdown", "&eLMS will start in &d{time}&e. Join with: &d/lms join"));
         lobbyFailedPlayersMessage = format(getString("messages.lobby-failed-players", "&eLMS unable to start due to too low player interest"));

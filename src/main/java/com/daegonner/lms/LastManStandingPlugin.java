@@ -87,7 +87,7 @@ public class LastManStandingPlugin extends JavaPlugin {
      *
      * @return {@code true} if the process encountered an error.
      */
-    private boolean setupSettings() {
+    public boolean setupSettings() {
         try {
             settings.load();
         } catch (IOException | InvalidConfigurationException e) {

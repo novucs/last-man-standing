@@ -1,5 +1,6 @@
 config-version: 1
 messages:
+  reload: "&eSettings successfully reloaded"
   lobby-start: "&eLMS lobby is now available to join! &d/lms join"
   lobby-countdown: "&eLMS will start in &d{time}&e. Join with: &d/lms join"
   lobby-failed-players: "&eLMS unable to start due to too low player interest"
