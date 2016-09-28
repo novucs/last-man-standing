@@ -25,8 +25,16 @@ public class GameTask extends BukkitRunnable {
         return lobby;
     }
 
+    public void setLobby(Lobby lobby) {
+        this.lobby = lobby;
+    }
+
     public Game getGame() {
         return game;
+    }
+
+    public void setGame(Game game) {
+        this.game = game;
     }
 
     public long getNextLobby() {
@@ -116,7 +124,7 @@ public class GameTask extends BukkitRunnable {
     /**
      * Closes the current lobby.
      */
-    private void closeLobby() {
+    public void closeLobby() {
         lobby = null;
         broadcast(plugin.getSettings().getLobbyCancelledMessage());
     }
@@ -150,7 +158,7 @@ public class GameTask extends BukkitRunnable {
             return;
         }
 
-        game = new Game(arena.get(), lobby.getPlayerQueue());
+        game = new Game(plugin, arena.get(), lobby.getPlayerQueue());
         lobby = null;
         game.start(settings);
         broadcast(plugin.getSettings().getGameTeleportedMessage());

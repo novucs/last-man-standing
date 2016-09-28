@@ -1,5 +1,6 @@
 package com.daegonner.lms.entity;
 
+import com.daegonner.lms.LastManStandingPlugin;
 import com.daegonner.lms.settings.ArenaSettings;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
@@ -13,12 +14,14 @@ import java.util.*;
  */
 public class Game {
 
+    private final LastManStandingPlugin plugin;
     private final Arena arena;
     private final Set<Player> participants;
     private final Set<Player> spectators = new HashSet<>();
     private final Map<Player, PlayerSnapshot> snapshots = new HashMap<>();
 
-    public Game(Arena arena, Set<Player> participants) {
+    public Game(LastManStandingPlugin plugin, Arena arena, Set<Player> participants) {
+        this.plugin = plugin;
         this.arena = arena;
         this.participants = participants;
     }
@@ -126,13 +129,49 @@ public class Game {
      * @param player the player.
      */
     public void playerDeath(Player player) {
-        if (!participants.contains(player)) {
+        player.spigot().respawn();
+        exit(player);
+    }
+
+    public void stop() {
+        participants.forEach(this::restore);
+        spectators.forEach(this::restore);
+        participants.clear();
+        spectators.clear();
+        plugin.getGameTask().setGame(null);
+        broadcast(plugin.getSettings().getGameCancelledMessage());
+    }
+
+    public boolean exit(Player player) {
+        boolean quit = participants.remove(player) || spectators.remove(player);
+        if (!quit) {
+            return false;
+        }
+
+        restore(player);
+        return true;
+    }
+
+    private void searchWinner() {
+        if (participants.size() != 1) {
             return;
         }
 
+        Player winner = participants.iterator().next();
+        broadcast(plugin.getSettings().getGameCompleteMessage().replace("{player}", winner.getName()));
+        // TODO: Grant winner crate.
+    }
+
+    public void restore(Player player) {
         PlayerSnapshot snapshot = snapshots.remove(player);
         if (snapshot != null) {
             snapshot.restore();
+        }
+    }
+
+    private void broadcast(String msg) {
+        if (!msg.isEmpty()) {
+            plugin.getServer().broadcastMessage(msg);
         }
     }
 

@@ -83,6 +83,17 @@ public class LastManStandingPlugin extends JavaPlugin {
         listeners.forEach(listener -> getServer().getPluginManager().registerEvents(listener, this));
     }
 
+    @Override
+    public void onDisable() {
+        if (gameTask.hasGame()) {
+            gameTask.getGame().stop();
+        }
+
+        if (gameTask.hasLobby()) {
+            gameTask.closeLobby();
+        }
+    }
+
     /**
      * Performs the settings setup process.
      *

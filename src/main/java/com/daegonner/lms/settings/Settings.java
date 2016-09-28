@@ -31,6 +31,8 @@ public class Settings {
     private String lobbyScheduledMessage;
     private String gameTeleportedMessage;
     private String gameWarmupMessage;
+    private String gameCancelledMessage;
+    private String gameCompleteMessage;
     private String playerOnlyCommandMessage;
     private String invalidSelectionMessage;
     private String arenaAlreadyExistsMessage;
@@ -105,6 +107,14 @@ public class Settings {
 
     public String getGameWarmupMessage() {
         return gameWarmupMessage;
+    }
+
+    public String getGameCancelledMessage() {
+        return gameCancelledMessage;
+    }
+
+    public String getGameCompleteMessage() {
+        return gameCompleteMessage;
     }
 
     public String getPlayerOnlyCommandMessage() {
@@ -257,6 +267,8 @@ public class Settings {
         lobbyScheduledMessage = format(getString("messages.lobby-scheduled", "&eNext lobby scheduled to run in &d{time}"));
         gameTeleportedMessage = format(getString("messages.game-teleported", "&eYou have been teleported into LMS"));
         gameWarmupMessage = format(getString("messages.game-warmup", "&eProtection ends in &d{time}"));
+        gameCancelledMessage = format(getString("messages.game-cancelled", "&eLMS has been cancelled"));
+        gameCompleteMessage = format(getString("messages.game-complete", "&d{player}&e has won the LMS!"));
         playerOnlyCommandMessage = format(getString("messages.player-only-command", "&cThis command can only be executed by players"));
         invalidSelectionMessage = format(getString("messages.invalid-selection", "&cPlease create a valid cuboid selection with WorldEdit"));
         arenaAlreadyExistsMessage = format(getString("messages.arena-already-exists", "&cAn arena by that name already exists"));

@@ -17,7 +17,9 @@ public class PlayerListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void handleDeath(PlayerDeathEvent event) {
         // Do nothing if there is no LMS game running.
-        if (!plugin.getGameTask().hasGame()) {
+        if (!plugin.getGameTask().hasGame() ||
+                !plugin.getGameTask().getGame().getParticipants().contains(event.getEntity()) ||
+                !plugin.getGameTask().getGame().getSpectators().contains(event.getEntity())) {
             return;
         }
 
