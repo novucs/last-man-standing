@@ -45,6 +45,8 @@ public class Settings {
     private String arenaSpawnDeletedMessage;
     private String arenaRegionUpdatedMessage;
     private String arenaDeletedMessage;
+    private String arenaListHeaderMessage;
+    private String arenaListMessage;
 
     private int lobbyStart;
     private int lobbyCountdown;
@@ -165,6 +167,14 @@ public class Settings {
         return arenaDeletedMessage;
     }
 
+    public String getArenaListHeaderMessage() {
+        return arenaListHeaderMessage;
+    }
+
+    public String getArenaListMessage() {
+        return arenaListMessage;
+    }
+
     public int getLobbyStart() {
         return lobbyStart;
     }
@@ -281,6 +291,8 @@ public class Settings {
         arenaSpawnDeletedMessage = format(getString("messages.arena-spawn-deleted", "&eArena spawn successfully deleted"));
         arenaRegionUpdatedMessage = format(getString("messages.arena-region-updated", "&eArena region successfully updated"));
         arenaDeletedMessage = format(getString("messages.arena-deleted", "&eArena successfully deleted"));
+        arenaListHeaderMessage = format(getString("messages.arena-list-header", "&e&l -- Arenas -- "));
+        arenaListMessage = format(getString("messages.arena-list", "&d{id}&e. {arena}"));
 
         lobbyStart = getInt("settings.lobby-start", 10800);
         lobbyCountdown = getInt("settings.lobby-countdown", 300);

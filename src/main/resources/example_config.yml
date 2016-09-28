@@ -24,6 +24,8 @@ messages:
   arena-spawn-deleted: "&eArena spawn successfully deleted"
   arena-region-updated: "&eArena region successfully updated"
   arena-deleted: "&eArena successfully deleted"
+  arena-list-header: "&e&l -- Arenas -- "
+  arena-list: "&d{id}&e. {arena}"
 settings:
   lobby-start: 10800
   lobby-countdown: 300

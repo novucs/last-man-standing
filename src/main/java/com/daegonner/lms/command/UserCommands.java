@@ -47,6 +47,14 @@ public class UserCommands {
     @Command(aliases = "list", desc = "List all arenas")
     @Require("lms.list")
     public void list(CommandSender sender, @Optional Integer page) {
+        message(sender, plugin.getSettings().getArenaListHeaderMessage());
+        int i = 0;
+        for (Arena arena : plugin.getArenaManager().getArenas().values()) {
+            i++;
+            message(sender, plugin.getSettings().getArenaListMessage()
+                    .replace("{id}", String.valueOf(i))
+                    .replace("{name}", arena.getName()));
+        }
     }
 
     @Command(aliases = "info", desc = "View information on an arena")
@@ -57,5 +65,11 @@ public class UserCommands {
     @Command(aliases = "vote", desc = "Vote to play an arena while in lobby")
     @Require("lms.vote")
     public void vote(CommandSender sender, Arena arena) {
+    }
+
+    private void message(CommandSender sender, String msg) {
+        if (!msg.isEmpty()) {
+            sender.sendMessage(msg);
+        }
     }
 }
