@@ -38,6 +38,8 @@ public class Settings {
     private String arenaNameSizeMessage;
     private String arenaLocationInvalidMessage;
     private String arenaSpawnCreatedMessage;
+    private String arenaSpawnInvalidMessage;
+    private String arenaSpawnDeletedMessage;
 
     private int lobbyStart;
     private int lobbyCountdown;
@@ -128,6 +130,14 @@ public class Settings {
 
     public String getArenaSpawnCreatedMessage() {
         return arenaSpawnCreatedMessage;
+    }
+
+    public String getArenaSpawnInvalidMessage() {
+        return arenaSpawnInvalidMessage;
+    }
+
+    public String getArenaSpawnDeletedMessage() {
+        return arenaSpawnDeletedMessage;
     }
 
     public int getLobbyStart() {
@@ -239,6 +249,8 @@ public class Settings {
         arenaNameSizeMessage = format(getString("messages.arena-name-size", "&cArena name is too long"));
         arenaLocationInvalidMessage = format(getString("messages.arena-location-invalid", "&cYou are not within the arena region"));
         arenaSpawnCreatedMessage = format(getString("messages.arena-spawn-created", "&eSuccessfully created a new arena spawn point"));
+        arenaSpawnInvalidMessage = format(getString("messages.arena-spawn-invalid", "&cA spawn by that ID does not exist"));
+        arenaSpawnDeletedMessage = format(getString("messages.arena-spawn-deleted", "&eArena spawn successfully deleted"));
 
         lobbyStart = getInt("settings.lobby-start", 10800);
         lobbyCountdown = getInt("settings.lobby-countdown", 300);

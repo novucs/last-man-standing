@@ -162,8 +162,23 @@ public class AdminCommands {
         });
     }
 
-    @Command(aliases = "delspawn", usage = "<arena> <spawn>", desc = "Deletes a spawn from an arena")
+    @Command(aliases = "delspawn", usage = "<arena> <spawn id>", desc = "Deletes a spawn from an arena")
     @Require("lms.delspawn")
-    public void delspawn(CommandSender sender, Arena arena, Integer spawn) {
+    public void delspawn(CommandSender sender, Arena arena, Integer spawnId) {
+        // Disallow deleting invalid spawns.
+        if (arena.getSpawns().size() < spawnId) {
+            sender.sendMessage(plugin.getSettings().getArenaSpawnInvalidMessage());
+            return;
+        }
+
+        // Locally remove the arena spawn.
+        ArenaSpawn spawn = arena.getSpawns().remove((int) spawnId);
+
+        // Asynchronously delete spawn from the database.
+        plugin.getExecutorService().execute(() -> {
+            ArenaSpawnModel spawnModel = ArenaSpawnModel.of(plugin, arena, spawn);
+            plugin.getDatabase().delete(spawnModel);
+            sender.sendMessage(plugin.getSettings().getArenaSpawnDeletedMessage());
+        });
     }
 }
