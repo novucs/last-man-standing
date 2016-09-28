@@ -113,7 +113,9 @@ public class Game {
     private void loadKits(ArenaSettings settings) {
         ItemStack[] contents = settings.getInventory().toArray(new ItemStack[settings.getInventory().size()]);
         for (Player player : participants) {
+            player.getActivePotionEffects().clear();
             PlayerInventory inventory = player.getInventory();
+            inventory.clear();
             inventory.setContents(contents);
             inventory.setHelmet(settings.getHeadArmour());
             inventory.setChestplate(settings.getBodyArmour());
@@ -133,6 +135,14 @@ public class Game {
             player.spigot().respawn();
             restore(player);
         }
+    }
+
+    public void addSpectator(Player player) {
+        snapshots.put(player, PlayerSnapshot.of(player));
+        player.getActivePotionEffects().clear();
+        player.getInventory().clear();
+        player.setGameMode(GameMode.SPECTATOR);
+        player.teleport(arena.getRandomSpawn());
     }
 
     public void stop() {

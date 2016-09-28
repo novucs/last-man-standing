@@ -36,6 +36,8 @@ public class Settings {
     private String gameRunningMessage;
     private String gameExitMessage;
     private String gameExitFailedMessage;
+    private String gameNonExistentMessage;
+    private String gameSpectateMessage;
     private String playerOnlyCommandMessage;
     private String invalidSelectionMessage;
     private String arenaAlreadyExistsMessage;
@@ -134,6 +136,14 @@ public class Settings {
 
     public String getGameExitFailedMessage() {
         return gameExitFailedMessage;
+    }
+
+    public String getGameNonExistentMessage() {
+        return gameNonExistentMessage;
+    }
+
+    public String getGameSpectateMessage() {
+        return gameSpectateMessage;
     }
 
     public String getPlayerOnlyCommandMessage() {
@@ -307,6 +317,8 @@ public class Settings {
         gameRunningMessage = format(getString("messages.game-running", "&cA game is already in progress"));
         gameExitMessage = format(getString("messages.game-exit", "&eSuccessfully left the LMS game"));
         gameExitFailedMessage = format(getString("messages.game-exit-failed", "&cYou are not currently in an LMS game"));
+        gameNonExistentMessage = format(getString("messages.game-non-existent", "&cNo LMS game exists"));
+        gameSpectateMessage = format(getString("messages.game-spectate", "&eYou are now spectating LMS"));
         playerOnlyCommandMessage = format(getString("messages.player-only-command", "&cThis command can only be executed by players"));
         invalidSelectionMessage = format(getString("messages.invalid-selection", "&cPlease create a valid cuboid selection with WorldEdit"));
         arenaAlreadyExistsMessage = format(getString("messages.arena-already-exists", "&cAn arena by that name already exists"));

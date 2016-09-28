@@ -72,6 +72,34 @@ public class UserCommands {
     @Command(aliases = "spectate", desc = "Spectate the game")
     @Require("lms.spectate")
     public void spectate(CommandSender sender) {
+        if (!(sender instanceof Player)) {
+            message(sender, plugin.getSettings().getPlayerOnlyCommandMessage());
+            return;
+        }
+
+        if (!plugin.getGameTask().hasGame()) {
+            message(sender, plugin.getSettings().getGameNonExistentMessage());
+            return;
+        }
+
+        Player player = (Player) sender;
+        Game game = plugin.getGameTask().getGame();
+        if (game.getSpectators().contains(player)) {
+            game.exit(player);
+            message(player, plugin.getSettings().getGameExitMessage());
+            return;
+        }
+
+        if (game.getParticipants().contains(player)) {
+            game.exit(player);
+            message(player, plugin.getSettings().getGameExitMessage());
+            game.addSpectator(player);
+            message(player, plugin.getSettings().getGameSpectateMessage());
+            return;
+        }
+
+        game.addSpectator(player);
+        message(player, plugin.getSettings().getGameSpectateMessage());
     }
 
     @Command(aliases = "list", desc = "List all arenas")
