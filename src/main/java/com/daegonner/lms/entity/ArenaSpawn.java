@@ -17,6 +17,17 @@ public class ArenaSpawn {
     private final float yaw;
     private final float pitch;
 
+    /**
+     * Creates a new {@link ArenaSpawn} from a {@link Location}.
+     *
+     * @param location the location to parse.
+     * @return the new {@link ArenaSpawn} representation of the location.
+     */
+    public static ArenaSpawn of(Location location) {
+        return new ArenaSpawn(location.getWorld(), location.getBlockX(), location.getY(), location.getZ(),
+                location.getYaw(), location.getPitch());
+    }
+
     public ArenaSpawn(World world, double x, double y, double z, float yaw, float pitch) {
         this.world = world;
         this.x = x;

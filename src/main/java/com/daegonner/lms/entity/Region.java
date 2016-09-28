@@ -88,6 +88,29 @@ public class Region {
         min = new BlockPos(world, minX, minY, minZ);
     }
 
+    /**
+     * Checks if a {@link Location} is inside the region.
+     *
+     * @param location the location to check.
+     * @return {@code true} if the location is inside the region.
+     */
+    public boolean isInside(Location location) {
+        return isInside(BlockPos.of(location));
+    }
+
+    /**
+     * Checks if a {@link BlockPos} is inside the region.
+     *
+     * @param pos the position to check.
+     * @return {@code true} if the position is inside the region.
+     */
+    public boolean isInside(BlockPos pos) {
+        return pos.getWorld() == max.getWorld() &&
+                pos.getX() < max.getX() && pos.getX() > min.getX() &&
+                pos.getY() < max.getY() && pos.getY() > min.getY() &&
+                pos.getZ() < max.getZ() && pos.getZ() > min.getZ();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

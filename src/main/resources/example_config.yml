@@ -15,6 +15,8 @@ messages:
   arena-created: "&eArena &d{name}&e created"
   arena-renamed: "&eArena renamed to &d{name}"
   arena-name-size: "&cArena name is too long"
+  arena-location-invalid: "&cYou are not within the arena region"
+  arena-spawn-created: "&eSuccessfully created a new arena spawn point"
 settings:
   lobby-start: 10800
   lobby-countdown: 300

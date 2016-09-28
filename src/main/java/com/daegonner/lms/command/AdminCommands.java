@@ -2,8 +2,10 @@ package com.daegonner.lms.command;
 
 import com.daegonner.lms.LastManStandingPlugin;
 import com.daegonner.lms.entity.Arena;
+import com.daegonner.lms.entity.ArenaSpawn;
 import com.daegonner.lms.entity.Region;
 import com.daegonner.lms.model.ArenaModel;
+import com.daegonner.lms.model.ArenaSpawnModel;
 import com.sk89q.intake.Command;
 import com.sk89q.intake.Require;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
@@ -134,6 +136,30 @@ public class AdminCommands {
     @Command(aliases = "addspawn", usage = "<arena>", desc = "Adds a spawn to an arena")
     @Require("lms.addspawn")
     public void addspawn(CommandSender sender, Arena arena) {
+        // Disallow non players to set arena spawns.
+        if (!(sender instanceof Player)) {
+            sender.sendMessage(plugin.getSettings().getPlayerOnlyCommandMessage());
+            return;
+        }
+
+        // Disallow spawns outside the arena.
+        Player player = (Player) sender;
+        if (!arena.getRegion().isInside(player.getLocation())) {
+            sender.sendMessage(plugin.getSettings().getArenaLocationInvalidMessage());
+            return;
+        }
+
+        // Asynchronously create and save an arena spawn to the database.
+        plugin.getExecutorService().execute(() -> {
+            ArenaSpawn spawn = ArenaSpawn.of(player.getLocation());
+            ArenaSpawnModel.of(plugin, arena, spawn);
+
+            // Add the spawn to the arena and send confirmation message on the server thread.
+            plugin.getServer().getScheduler().runTask(plugin, () -> {
+                arena.getSpawns().add(spawn);
+                player.sendMessage(plugin.getSettings().getArenaSpawnCreatedMessage());
+            });
+        });
     }
 
     @Command(aliases = "delspawn", usage = "<arena> <spawn>", desc = "Deletes a spawn from an arena")
