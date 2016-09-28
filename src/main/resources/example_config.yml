@@ -8,6 +8,7 @@ messages:
   game-warmup: "&eProtection ends in &d{time}"
   player-only-command: "&cThis command can only be executed by players"
   invalid-selection: "&cPlease create a valid cuboid selection with WorldEdit"
+  arena-already-exists: "&cAn arena by that name already exists"
   arena-created: "&eArena &d{name}&e created"
   arena-renamed: "&eArena renamed to &d{name}"
   arena-name-size: "&cArena name is too long"

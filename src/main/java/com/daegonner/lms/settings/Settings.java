@@ -29,6 +29,7 @@ public class Settings {
     private String gameWarmupMessage;
     private String playerOnlyCommandMessage;
     private String invalidSelectionMessage;
+    private String arenaAlreadyExistsMessage;
     private String arenaCreatedMessage;
     private String arenaRenamedMessage;
     private String arenaNameSizeMessage;
@@ -86,6 +87,10 @@ public class Settings {
 
     public String getInvalidSelectionMessage() {
         return invalidSelectionMessage;
+    }
+
+    public String getArenaAlreadyExistsMessage() {
+        return arenaAlreadyExistsMessage;
     }
 
     public String getArenaCreatedMessage() {
@@ -200,6 +205,7 @@ public class Settings {
         gameWarmupMessage = format(getString("messages.game-warmup", "&eProtection ends in &d{time}"));
         playerOnlyCommandMessage = format(getString("messages.player-only-command", "&cThis command can only be executed by players"));
         invalidSelectionMessage = format(getString("messages.invalid-selection", "&cPlease create a valid cuboid selection with WorldEdit"));
+        arenaAlreadyExistsMessage = format(getString("messages.arena-already-exists", "&cAn arena by that name already exists"));
         arenaCreatedMessage = format(getString("messages.arena-created", "&eArena &d{name}&e created"));
         arenaRenamedMessage = format(getString("messages.arena-renamed", "&eArena renamed to &d{name}"));
         arenaNameSizeMessage = format(getString("messages.arena-name-size", "&cArena name is too long"));

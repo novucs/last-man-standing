@@ -50,6 +50,12 @@ public class AdminCommands {
             return;
         }
 
+        // Disallow creating arenas of the same name.
+        if (plugin.getArenaManager().getArenas().containsKey(name.toLowerCase())) {
+            sender.sendMessage(plugin.getSettings().getArenaAlreadyExistsMessage());
+            return;
+        }
+
         // Get the players world edit selection.
         Player player = (Player) sender;
         WorldEditPlugin worldEdit = (WorldEditPlugin) plugin.getServer().getPluginManager().getPlugin("WorldEdit");
@@ -85,6 +91,13 @@ public class AdminCommands {
         // Disallow names above the maximum storage limit.
         if (name.length() > 30) {
             sender.sendMessage(plugin.getSettings().getArenaNameSizeMessage());
+            return;
+        }
+
+        // Disallow renaming arenas to the same name, unless modifying case.
+        if (plugin.getArenaManager().getArenas().containsKey(name.toLowerCase()) &&
+                !name.equalsIgnoreCase(arena.getName())) {
+            sender.sendMessage(plugin.getSettings().getArenaAlreadyExistsMessage());
             return;
         }
 
