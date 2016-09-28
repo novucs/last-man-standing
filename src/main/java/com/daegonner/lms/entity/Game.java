@@ -129,8 +129,10 @@ public class Game {
      * @param player the player.
      */
     public void playerDeath(Player player) {
-        player.spigot().respawn();
-        exit(player);
+        if (participants.remove(player) || spectators.remove(player)) {
+            player.spigot().respawn();
+            restore(player);
+        }
     }
 
     public void stop() {
