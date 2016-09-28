@@ -44,7 +44,7 @@ public class Bindings extends BindingHelper {
     @BindingMatch(type = Arena.class, behavior = BindingBehavior.CONSUMES, consumedCount = 1)
     public Arena getArena(ArgumentStack context) throws ParameterException {
         String name = context.next();
-        Arena arena = plugin.getArenaManager().getArenas().get(name);
+        Arena arena = plugin.getArenaManager().getArenas().get(name.toLowerCase());
 
         if (arena == null) {
             throw new ParameterException("No arena found by that name.");

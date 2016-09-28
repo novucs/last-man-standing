@@ -61,6 +61,7 @@ public class AdminCommands {
         Region region = Region.create(cuboid.getMaximumPoint(), cuboid.getMinimumPoint());
         Arena arena = new Arena(name, region);
         ArenaModel.of(plugin, arena);
+        plugin.getArenaManager().getArenas().put(name.toLowerCase(), arena);
         player.sendMessage(plugin.getSettings().getArenaCreatedMessage().replace("{name}", name));
     }
 
@@ -76,10 +77,12 @@ public class AdminCommands {
             sender.sendMessage(plugin.getSettings().getArenaNameSizeMessage());
             return;
         }
+        plugin.getArenaManager().getArenas().remove(arena.getName().toLowerCase());
         ArenaModel model = ArenaModel.of(plugin, arena);
         model.setName(name);
         plugin.getDatabase().save(model);
         arena.setName(name);
+        plugin.getArenaManager().getArenas().put(arena.getName().toLowerCase(), arena);
         sender.sendMessage(plugin.getSettings().getArenaRenamedMessage().replace("{name}", name));
     }
 

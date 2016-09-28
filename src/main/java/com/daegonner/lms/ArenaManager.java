@@ -80,7 +80,7 @@ public class ArenaManager {
         for (ArenaModel model : fetched) {
             Arena arena = parseArena(model);
             if (arena != null) {
-                arenas.put(arena.getName(), arena);
+                arenas.put(arena.getName().toLowerCase(), arena);
             }
         }
 
