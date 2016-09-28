@@ -36,6 +36,7 @@ public class PlayerListener implements Listener {
 
         if (plugin.getGameTask().hasLobby()) {
             plugin.getGameTask().getLobby().getPlayerQueue().remove(event.getPlayer());
+            plugin.getGameTask().getLobby().getArenaVotes().remove(event.getPlayer());
         }
     }
 }
