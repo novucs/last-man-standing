@@ -16,7 +16,8 @@ public class GameTask extends BukkitRunnable {
     private final LastManStandingPlugin plugin;
     private Lobby lobby;
     private Game game;
-    private long lastLobby;
+    private long nextLobby;
+    private long lobbyStart;
     private int lastCountdown;
 
     public Lobby getLobby() {
@@ -25,6 +26,14 @@ public class GameTask extends BukkitRunnable {
 
     public Game getGame() {
         return game;
+    }
+
+    public long getNextLobby() {
+        return nextLobby;
+    }
+
+    public void setNextLobby(long nextLobby) {
+        this.nextLobby = nextLobby;
     }
 
     public GameTask(LastManStandingPlugin plugin) {
@@ -62,6 +71,7 @@ public class GameTask extends BukkitRunnable {
 
     /**
      * Checks if the task has an active game.
+     *
      * @return {@code true} if there is an active game.
      */
     public boolean hasGame() {
@@ -83,7 +93,7 @@ public class GameTask extends BukkitRunnable {
      * @return {@code true} if a new lobby should be created.
      */
     private boolean isNextLobbyReady() {
-        return System.currentTimeMillis() - lastLobby > plugin.getSettings().getLobbyStart();
+        return System.currentTimeMillis() <= nextLobby;
     }
 
     /**
@@ -91,7 +101,8 @@ public class GameTask extends BukkitRunnable {
      */
     private void createLobby() {
         lobby = new Lobby();
-        lastLobby = System.currentTimeMillis();
+        lobbyStart = System.currentTimeMillis();
+        nextLobby = System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(plugin.getSettings().getLobbyStart());
         lastCountdown = Integer.MAX_VALUE;
         broadcast(plugin.getSettings().getLobbyStartMessage());
     }
@@ -110,7 +121,7 @@ public class GameTask extends BukkitRunnable {
      * @return {@code true} if the countdown is finished.
      */
     private boolean isCountdownFinished() {
-        return System.currentTimeMillis() - lastLobby > plugin.getSettings().getLobbyCountdown();
+        return System.currentTimeMillis() - lobbyStart > TimeUnit.SECONDS.toMillis(plugin.getSettings().getLobbyCountdown());
     }
 
     /**
@@ -143,12 +154,12 @@ public class GameTask extends BukkitRunnable {
      * Sends messages in chat for the active lobby countdown.
      */
     private void countdown() {
-        long remaining = getRemainingCountdown();
+        long remaining = TimeUnit.MILLISECONDS.toSeconds(getRemainingCountdown());
 
         for (int time : plugin.getSettings().getAnnouncementTimes()) {
             if (time < remaining && lastCountdown > time) {
                 broadcast(plugin.getSettings().getLobbyCountdownMessage().replace("{time}",
-                        DurationUtils.format((int) TimeUnit.MILLISECONDS.toSeconds(remaining))));
+                        DurationUtils.format((int) remaining)));
                 return;
             }
         }
@@ -160,7 +171,7 @@ public class GameTask extends BukkitRunnable {
      * @return the remaining countdown.
      */
     private long getRemainingCountdown() {
-        return lastLobby - System.currentTimeMillis() + plugin.getSettings().getLobbyCountdown();
+        return lobbyStart - System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(plugin.getSettings().getLobbyCountdown());
     }
 
     /**

@@ -28,6 +28,7 @@ public class Settings {
     private String lobbyCancelledMessage;
     private String lobbyNonExistentMessage;
     private String lobbyJoinedMessage;
+    private String lobbyScheduledMessage;
     private String gameTeleportedMessage;
     private String gameWarmupMessage;
     private String playerOnlyCommandMessage;
@@ -92,6 +93,10 @@ public class Settings {
 
     public String getLobbyJoinedMessage() {
         return lobbyJoinedMessage;
+    }
+
+    public String getLobbyScheduledMessage() {
+        return lobbyScheduledMessage;
     }
 
     public String getGameTeleportedMessage() {
@@ -249,6 +254,7 @@ public class Settings {
         lobbyCancelledMessage = format(getString("messages.lobby-cancelled", "&eLMS lobby has been cancelled"));
         lobbyNonExistentMessage = format(getString("messages.lobby-non-existent", "&cNo LMS lobby exists"));
         lobbyJoinedMessage = format(getString("messages.lobby-joined", "&eSuccessfully joined the LMS lobby"));
+        lobbyScheduledMessage = format(getString("messages.lobby-scheduled", "&eNext lobby scheduled to run in &d{time}"));
         gameTeleportedMessage = format(getString("messages.game-teleported", "&eYou have been teleported into LMS"));
         gameWarmupMessage = format(getString("messages.game-warmup", "&eProtection ends in &d{time}"));
         playerOnlyCommandMessage = format(getString("messages.player-only-command", "&cThis command can only be executed by players"));

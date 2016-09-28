@@ -42,7 +42,8 @@ public class LastManStandingPlugin extends JavaPlugin {
             RegionModel.class,
             ArenaModel.class,
             EntityPosModel.class,
-            ArenaSpawnModel.class
+            ArenaSpawnModel.class,
+            LobbyScheduleModel.class
     );
 
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();

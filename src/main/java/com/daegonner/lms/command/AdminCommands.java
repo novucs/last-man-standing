@@ -4,10 +4,7 @@ import com.daegonner.lms.LastManStandingPlugin;
 import com.daegonner.lms.entity.Arena;
 import com.daegonner.lms.entity.ArenaSpawn;
 import com.daegonner.lms.entity.Region;
-import com.daegonner.lms.model.ArenaModel;
-import com.daegonner.lms.model.ArenaSpawnModel;
-import com.daegonner.lms.model.BlockPosModel;
-import com.daegonner.lms.model.RegionModel;
+import com.daegonner.lms.model.*;
 import com.sk89q.intake.Command;
 import com.sk89q.intake.Require;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
@@ -17,6 +14,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 public class AdminCommands {
 
@@ -127,6 +125,20 @@ public class AdminCommands {
     @Command(aliases = "schedule", usage = "<seconds>", desc = "Schedule when the next lobby starts")
     @Require("lms.schedule")
     public void schedule(CommandSender sender, Integer seconds) {
+        // Calculate when the next lobby should run,
+        long nextLobby = TimeUnit.SECONDS.toMillis(seconds) + System.currentTimeMillis();
+
+        // Asynchronously update the database with the new time.
+        plugin.getExecutorService().execute(() -> {
+            LobbyScheduleModel model = LobbyScheduleModel.of(plugin);
+            model.setNextLobby(nextLobby);
+
+            // Locally update the new time on the server thread.
+            plugin.getServer().getScheduler().runTask(plugin, () -> {
+                plugin.getGameTask().setNextLobby(nextLobby);
+                sender.sendMessage(plugin.getSettings().getLobbyScheduledMessage());
+            });
+        });
     }
 
     @Command(aliases = "setarea", usage = "<area>", desc = "Set the area of an arena with WorldEdit selection")

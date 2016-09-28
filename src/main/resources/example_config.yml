@@ -7,6 +7,7 @@ messages:
   lobby-cancelled: "&eLMS lobby has been cancelled"
   lobby-non-existent: "&cNo LMS lobby exists"
   lobby-joined: "&eSuccessfully joined the LMS lobby"
+  lobby-scheduled: "&eNext lobby scheduled to run in &d{time}"
   game-teleported: "&eYou have been teleported into LMS"
   game-warmup: "&eProtection ends in &d{time}"
   player-only-command: "&cThis command can only be executed by players"
