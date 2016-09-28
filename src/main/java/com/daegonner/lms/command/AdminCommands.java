@@ -77,6 +77,17 @@ public class AdminCommands {
     @Command(aliases = "delete", usage = "<arena>", desc = "Delete an arena")
     @Require("lms.delete")
     public void delete(CommandSender sender, Arena arena) {
+        // Asynchronously delete arena from the database.
+        plugin.getExecutorService().execute(() -> {
+            ArenaModel model = ArenaModel.of(plugin, arena);
+            plugin.getDatabase().delete(model);
+
+            // Delete arena locally through the server thread.
+            plugin.getServer().getScheduler().runTask(plugin, () -> {
+                plugin.getArenaManager().getArenas().remove(arena.getName().toLowerCase());
+                sender.sendMessage(plugin.getSettings().getArenaDeletedMessage());
+            });
+        });
     }
 
     @Command(aliases = "rename", usage = "<arena> <name>", desc = "Rename an arena")

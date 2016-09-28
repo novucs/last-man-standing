@@ -20,6 +20,7 @@ messages:
   arena-spawn-invalid: "&cA spawn by that ID does not exist"
   arena-spawn-deleted: "&eArena spawn successfully deleted"
   arena-region-updated: "&eArena region successfully updated"
+  arena-deleted: "&eArena successfully deleted"
 settings:
   lobby-start: 10800
   lobby-countdown: 300
