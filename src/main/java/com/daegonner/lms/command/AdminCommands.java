@@ -2,6 +2,7 @@ package com.daegonner.lms.command;
 
 import com.daegonner.lms.LastManStandingPlugin;
 import com.daegonner.lms.entity.Arena;
+import com.daegonner.lms.model.ArenaModel;
 import com.sk89q.intake.Command;
 import com.sk89q.intake.Require;
 import org.bukkit.command.CommandSender;
@@ -32,6 +33,7 @@ public class AdminCommands {
     @Command(aliases = "create", usage = "<name>", desc = "Create a new arena")
     @Require("lms.create")
     public void create(CommandSender sender, String name) {
+        // ArenaModel.of(plugin, arena);
     }
 
     @Command(aliases = "delete", usage = "<arena>", desc = "Delete an arena")
@@ -42,6 +44,15 @@ public class AdminCommands {
     @Command(aliases = "rename", usage = "<arena> <name>", desc = "Rename an arena")
     @Require("lms.rename")
     public void rename(CommandSender sender, Arena arena, String name) {
+        if (name.length() > 30) {
+            sender.sendMessage(plugin.getSettings().getArenaNameSizeMessage());
+            return;
+        }
+        ArenaModel model = ArenaModel.of(plugin, arena);
+        model.setName(name);
+        plugin.getDatabase().save(model);
+        arena.setName(name);
+        sender.sendMessage(plugin.getSettings().getArenaRenamedMessage().replace("{name}", name));
     }
 
     @Command(aliases = "schedule", usage = "<seconds>", desc = "Schedule when the next lobby starts")

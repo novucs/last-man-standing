@@ -27,6 +27,9 @@ public class Settings {
     private String lobbyCancelled;
     private String gameTeleportedMessage;
     private String gameWarmupMessage;
+    private String arenaCreatedMessage;
+    private String arenaRenamedMessage;
+    private String arenaNameSizeMessage;
 
     private int lobbyStart;
     private int lobbyCountdown;
@@ -73,6 +76,18 @@ public class Settings {
 
     public String getGameWarmupMessage() {
         return gameWarmupMessage;
+    }
+
+    public String getArenaCreatedMessage() {
+        return arenaCreatedMessage;
+    }
+
+    public String getArenaRenamedMessage() {
+        return arenaRenamedMessage;
+    }
+
+    public String getArenaNameSizeMessage() {
+        return arenaNameSizeMessage;
     }
 
     public int getLobbyStart() {
@@ -173,6 +188,9 @@ public class Settings {
         lobbyCancelled = format(getString("messages.lobby-cancelled", "&eLMS lobby has been cancelled."));
         gameTeleportedMessage = format(getString("messages.game-teleported", "&eYou have been teleported into LMS"));
         gameWarmupMessage = format(getString("messages.game-warmup", "&eProtection ends in &d{time}"));
+        arenaCreatedMessage = format(getString("messages.arena-created", "&eArena &d{name}&e created"));
+        arenaRenamedMessage = format(getString("messages.arena-renamed", "&eArena renamed to &d{name}"));
+        arenaNameSizeMessage = format(getString("messages.arena-name-size", "&cArena name is too long"));
 
         lobbyStart = getInt("settings.lobby-start", 10800);
         lobbyCountdown = getInt("settings.lobby-countdown", 300);

@@ -6,6 +6,9 @@ messages:
   lobby-cancelled: "&eLMS lobby has been cancelled."
   game-teleported: "&eYou have been teleported into LMS"
   game-warmup: "&eProtection ends in &d{time}"
+  arena-created: "&eArena &d{name}&e created"
+  arena-renamed: "&eArena renamed to &d{name}"
+  arena-name-size: "&cArena name is too long"
 settings:
   lobby-start: 10800
   lobby-countdown: 300

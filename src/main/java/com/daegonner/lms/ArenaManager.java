@@ -32,6 +32,12 @@ public class ArenaManager {
         return arenas;
     }
 
+    public void saveArena(Arena arena) {
+    }
+
+    public void renameArena(Arena arena, String name) {
+    }
+
     /**
      * Gets a random loaded arena.
      *
