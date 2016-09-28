@@ -26,6 +26,11 @@ messages:
   arena-deleted: "&eArena successfully deleted"
   arena-list-header: "&e&l -- Arenas -- "
   arena-list: "&d{id}&e. {arena}"
+  arena-info: |
+    &e&l -- Arena {arena} --
+    &eRegion: {world} {minX},{minY},{minZ} -> {maxX},{maxY},{maxZ}
+    {spawns}
+  arena-info-spawn: "&eSpawn {id}: {x} {y} {z} {yaw} {pitch}"
 settings:
   lobby-start: 10800
   lobby-countdown: 300
