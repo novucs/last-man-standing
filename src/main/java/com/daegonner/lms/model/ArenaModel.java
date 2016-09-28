@@ -123,7 +123,7 @@ public class ArenaModel implements Model {
             model = new ArenaModel();
             model.setName(arena.getName());
             model.setRegion(region);
-            plugin.getDatabase().save(arena);
+            plugin.getDatabase().save(model);
         }
 
         return model;
