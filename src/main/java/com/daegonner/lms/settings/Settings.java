@@ -27,6 +27,8 @@ public class Settings {
     private String lobbyCancelled;
     private String gameTeleportedMessage;
     private String gameWarmupMessage;
+    private String playerOnlyCommandMessage;
+    private String invalidSelectionMessage;
     private String arenaCreatedMessage;
     private String arenaRenamedMessage;
     private String arenaNameSizeMessage;
@@ -76,6 +78,14 @@ public class Settings {
 
     public String getGameWarmupMessage() {
         return gameWarmupMessage;
+    }
+
+    public String getPlayerOnlyCommandMessage() {
+        return playerOnlyCommandMessage;
+    }
+
+    public String getInvalidSelectionMessage() {
+        return invalidSelectionMessage;
     }
 
     public String getArenaCreatedMessage() {
@@ -188,6 +198,8 @@ public class Settings {
         lobbyCancelled = format(getString("messages.lobby-cancelled", "&eLMS lobby has been cancelled."));
         gameTeleportedMessage = format(getString("messages.game-teleported", "&eYou have been teleported into LMS"));
         gameWarmupMessage = format(getString("messages.game-warmup", "&eProtection ends in &d{time}"));
+        playerOnlyCommandMessage = format(getString("messages.player-only-command", "&cThis command can only be executed by players"));
+        invalidSelectionMessage = format(getString("messages.invalid-selection", "&cPlease create a valid cuboid selection with WorldEdit"));
         arenaCreatedMessage = format(getString("messages.arena-created", "&eArena &d{name}&e created"));
         arenaRenamedMessage = format(getString("messages.arena-renamed", "&eArena renamed to &d{name}"));
         arenaNameSizeMessage = format(getString("messages.arena-name-size", "&cArena name is too long"));

@@ -2,10 +2,15 @@ package com.daegonner.lms.command;
 
 import com.daegonner.lms.LastManStandingPlugin;
 import com.daegonner.lms.entity.Arena;
+import com.daegonner.lms.entity.Region;
 import com.daegonner.lms.model.ArenaModel;
 import com.sk89q.intake.Command;
 import com.sk89q.intake.Require;
+import com.sk89q.worldedit.bukkit.WorldEditPlugin;
+import com.sk89q.worldedit.bukkit.selections.CuboidSelection;
+import com.sk89q.worldedit.bukkit.selections.Selection;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 public class AdminCommands {
 
@@ -33,7 +38,30 @@ public class AdminCommands {
     @Command(aliases = "create", usage = "<name>", desc = "Create a new arena")
     @Require("lms.create")
     public void create(CommandSender sender, String name) {
-        // ArenaModel.of(plugin, arena);
+        if (!(sender instanceof Player)) {
+            sender.sendMessage(plugin.getSettings().getPlayerOnlyCommandMessage());
+            return;
+        }
+
+        if (name.length() > 30) {
+            sender.sendMessage(plugin.getSettings().getArenaNameSizeMessage());
+            return;
+        }
+
+        Player player = (Player) sender;
+        WorldEditPlugin worldEdit = (WorldEditPlugin) plugin.getServer().getPluginManager().getPlugin("WorldEdit");
+        Selection selection = worldEdit.getSelection(player);
+
+        if (selection == null || !(selection instanceof CuboidSelection)) {
+            player.sendMessage(plugin.getSettings().getInvalidSelectionMessage());
+            return;
+        }
+
+        CuboidSelection cuboid = (CuboidSelection) selection;
+        Region region = Region.create(cuboid.getMaximumPoint(), cuboid.getMinimumPoint());
+        Arena arena = new Arena(name, region);
+        ArenaModel.of(plugin, arena);
+        player.sendMessage(plugin.getSettings().getArenaCreatedMessage().replace("{name}", name));
     }
 
     @Command(aliases = "delete", usage = "<arena>", desc = "Delete an arena")
