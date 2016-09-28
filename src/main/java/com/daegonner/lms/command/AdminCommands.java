@@ -38,6 +38,13 @@ public class AdminCommands {
     @Command(aliases = "stop", desc = "Stop an LMS event")
     @Require("lms.stop")
     public void stop(CommandSender sender) {
+        if (plugin.getGameTask().hasGame()) {
+            plugin.getGameTask().getGame().stop();
+        }
+
+        if (plugin.getGameTask().hasLobby()) {
+            plugin.getGameTask().closeLobby();
+        }
     }
 
     @Command(aliases = "reload", desc = "Reload the configuration")
