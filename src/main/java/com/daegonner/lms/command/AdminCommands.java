@@ -132,6 +132,7 @@ public class AdminCommands {
         plugin.getExecutorService().execute(() -> {
             LobbyScheduleModel model = LobbyScheduleModel.of(plugin);
             model.setNextLobby(nextLobby);
+            plugin.getDatabase().save(model);
 
             // Locally update the new time on the server thread.
             plugin.getServer().getScheduler().runTask(plugin, () -> {

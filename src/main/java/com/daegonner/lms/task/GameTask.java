@@ -4,6 +4,7 @@ import com.daegonner.lms.LastManStandingPlugin;
 import com.daegonner.lms.entity.Arena;
 import com.daegonner.lms.entity.Game;
 import com.daegonner.lms.entity.Lobby;
+import com.daegonner.lms.model.LobbyScheduleModel;
 import com.daegonner.lms.settings.ArenaSettings;
 import com.daegonner.lms.util.DurationUtils;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -103,6 +104,11 @@ public class GameTask extends BukkitRunnable {
         lobby = new Lobby();
         lobbyStart = System.currentTimeMillis();
         nextLobby = System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(plugin.getSettings().getLobbyStart());
+        plugin.getExecutorService().execute(() -> {
+            LobbyScheduleModel model = LobbyScheduleModel.of(plugin);
+            model.setNextLobby(nextLobby);
+            plugin.getDatabase().save(model);
+        });
         lastCountdown = Integer.MAX_VALUE;
         broadcast(plugin.getSettings().getLobbyStartMessage());
     }
