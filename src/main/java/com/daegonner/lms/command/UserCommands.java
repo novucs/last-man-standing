@@ -3,6 +3,7 @@ package com.daegonner.lms.command;
 import com.daegonner.lms.LastManStandingPlugin;
 import com.daegonner.lms.entity.Arena;
 import com.daegonner.lms.entity.ArenaSpawn;
+import com.daegonner.lms.entity.Game;
 import com.sk89q.intake.Command;
 import com.sk89q.intake.Require;
 import com.sk89q.intake.parametric.annotation.Optional;
@@ -23,23 +24,49 @@ public class UserCommands {
     @Require("lms.join")
     public void join(CommandSender sender) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(plugin.getSettings().getPlayerOnlyCommandMessage());
+            message(sender, plugin.getSettings().getPlayerOnlyCommandMessage());
             return;
         }
 
         if (!plugin.getGameTask().hasLobby()) {
-            sender.sendMessage(plugin.getSettings().getLobbyNonExistentMessage());
+            message(sender, plugin.getSettings().getLobbyNonExistentMessage());
             return;
         }
 
         Player player = (Player) sender;
         plugin.getGameTask().getLobby().getPlayerQueue().add(player);
-        player.sendMessage(plugin.getSettings().getLobbyJoinedMessage());
+        message(sender, plugin.getSettings().getLobbyJoinedMessage());
     }
 
     @Command(aliases = "quit", desc = "Quit the game")
     @Require("lms.quit")
     public void quit(CommandSender sender) {
+        if (!(sender instanceof Player)) {
+            message(sender, plugin.getSettings().getPlayerOnlyCommandMessage());
+            return;
+        }
+
+        Player player = (Player) sender;
+
+        if (plugin.getGameTask().hasGame()) {
+            if (plugin.getGameTask().getGame().exit(player)) {
+                message(player, plugin.getSettings().getGameExitMessage());
+            } else {
+                message(player, plugin.getSettings().getGameExitFailedMessage());
+            }
+            return;
+        }
+
+        if (plugin.getGameTask().hasLobby()) {
+            if (plugin.getGameTask().getLobby().getPlayerQueue().remove(player)) {
+                message(player, plugin.getSettings().getGameExitMessage());
+            } else {
+                message(player, plugin.getSettings().getGameExitFailedMessage());
+            }
+            return;
+        }
+
+        message(player, plugin.getSettings().getGameExitFailedMessage());
     }
 
     @Command(aliases = "spectate", desc = "Spectate the game")

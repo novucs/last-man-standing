@@ -13,6 +13,8 @@ messages:
   game-cancelled: "&eLMS has been cancelled"
   game-complete: "&d{player}&e has won the LMS!"
   game-running: "&cA game is already in progress"
+  game-exit: "&eSuccessfully left the LMS game"
+  game-exit-failed: "&cYou are not currently in an LMS game"
   player-only-command: "&cThis command can only be executed by players"
   invalid-selection: "&cPlease create a valid cuboid selection with WorldEdit"
   arena-already-exists: "&cAn arena by that name already exists"
