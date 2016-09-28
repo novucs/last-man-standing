@@ -6,6 +6,8 @@ import com.daegonner.lms.entity.ArenaSpawn;
 import com.daegonner.lms.entity.Region;
 import com.daegonner.lms.model.ArenaModel;
 import com.daegonner.lms.model.ArenaSpawnModel;
+import com.daegonner.lms.model.BlockPosModel;
+import com.daegonner.lms.model.RegionModel;
 import com.sk89q.intake.Command;
 import com.sk89q.intake.Require;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
@@ -13,6 +15,8 @@ import com.sk89q.worldedit.bukkit.selections.CuboidSelection;
 import com.sk89q.worldedit.bukkit.selections.Selection;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import java.util.Optional;
 
 public class AdminCommands {
 
@@ -42,12 +46,6 @@ public class AdminCommands {
     @Command(aliases = "create", usage = "<name>", desc = "Create a new arena")
     @Require("lms.create")
     public void create(CommandSender sender, String name) {
-        // Disallow non players to create arenas.
-        if (!(sender instanceof Player)) {
-            sender.sendMessage(plugin.getSettings().getPlayerOnlyCommandMessage());
-            return;
-        }
-
         // Disallow names above the maximum storage limit.
         if (name.length() > 30) {
             sender.sendMessage(plugin.getSettings().getArenaNameSizeMessage());
@@ -60,27 +58,19 @@ public class AdminCommands {
             return;
         }
 
-        // Get the players world edit selection.
-        Player player = (Player) sender;
-        WorldEditPlugin worldEdit = (WorldEditPlugin) plugin.getServer().getPluginManager().getPlugin("WorldEdit");
-        Selection selection = worldEdit.getSelection(player);
-
-        // Disallow non-cuboid selections.
-        if (selection == null || !(selection instanceof CuboidSelection)) {
-            player.sendMessage(plugin.getSettings().getInvalidSelectionMessage());
+        // Attempt to get the region selected by the sender.
+        Optional<Region> region = getRegion(sender);
+        if (!region.isPresent()) {
             return;
         }
 
-        // Create the new arena locally.
-        CuboidSelection cuboid = (CuboidSelection) selection;
-        Region region = Region.create(cuboid.getMaximumPoint(), cuboid.getMinimumPoint());
-        Arena arena = new Arena(name, region);
+        Arena arena = new Arena(name, region.get());
         plugin.getArenaManager().getArenas().put(name.toLowerCase(), arena);
 
         // Save arena to the database and send confirmation message asynchronously.
         plugin.getExecutorService().execute(() -> {
             ArenaModel.of(plugin, arena);
-            player.sendMessage(plugin.getSettings().getArenaCreatedMessage().replace("{name}", name));
+            sender.sendMessage(plugin.getSettings().getArenaCreatedMessage().replace("{name}", name));
         });
     }
 
@@ -131,6 +121,27 @@ public class AdminCommands {
     @Command(aliases = "setarea", usage = "<area>", desc = "Set the area of an arena with WorldEdit selection")
     @Require("lms.setarea")
     public void setarea(CommandSender sender, Arena arena) {
+        // Do nothing if sender has not selected a region.
+        Optional<Region> regionOptional = getRegion(sender);
+        if (!regionOptional.isPresent()) {
+            return;
+        }
+
+        Region region = regionOptional.get();
+
+        // Update and save the region to the database asynchronously.
+        plugin.getExecutorService().execute(() -> {
+            RegionModel regionModel = RegionModel.of(plugin, arena.getRegion());
+            regionModel.setMax(BlockPosModel.of(plugin, region.getMax()));
+            regionModel.setMin(BlockPosModel.of(plugin, region.getMin()));
+            plugin.getDatabase().save(regionModel);
+
+            // Update local region and send confirmation message on the main server thread.
+            plugin.getServer().getScheduler().runTask(plugin, () -> {
+                arena.getRegion().setPoints(region.getMax(), region.getMin());
+                sender.sendMessage(plugin.getSettings().getArenaRegionUpdatedMessage());
+            });
+        });
     }
 
     @Command(aliases = "addspawn", usage = "<arena>", desc = "Adds a spawn to an arena")
@@ -180,5 +191,29 @@ public class AdminCommands {
             plugin.getDatabase().delete(spawnModel);
             sender.sendMessage(plugin.getSettings().getArenaSpawnDeletedMessage());
         });
+    }
+
+    private Optional<Region> getRegion(CommandSender sender) {
+        // Disallow non players to create arenas.
+        if (!(sender instanceof Player)) {
+            sender.sendMessage(plugin.getSettings().getPlayerOnlyCommandMessage());
+            return Optional.empty();
+        }
+
+        // Get the players world edit selection.
+        Player player = (Player) sender;
+        WorldEditPlugin worldEdit = (WorldEditPlugin) plugin.getServer().getPluginManager().getPlugin("WorldEdit");
+        Selection selection = worldEdit.getSelection(player);
+
+        // Disallow non-cuboid selections.
+        if (selection == null || !(selection instanceof CuboidSelection)) {
+            player.sendMessage(plugin.getSettings().getInvalidSelectionMessage());
+            return Optional.empty();
+        }
+
+        // Create the new arena locally.
+        CuboidSelection cuboid = (CuboidSelection) selection;
+        Region region = Region.create(cuboid.getMaximumPoint(), cuboid.getMinimumPoint());
+        return Optional.of(region);
     }
 }
