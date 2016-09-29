@@ -136,13 +136,12 @@ public class ArenaModel implements Model {
         ArenaModel that = (ArenaModel) o;
         return id == that.id &&
                 Objects.equals(region, that.region) &&
-                Objects.equals(name, that.name) &&
-                Objects.equals(spawns, that.spawns);
+                Objects.equals(name, that.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, region, name, spawns);
+        return Objects.hash(id, region, name);
     }
 
     @Override
@@ -151,7 +150,6 @@ public class ArenaModel implements Model {
                 "id=" + id +
                 ", region=" + region +
                 ", name='" + name + '\'' +
-                ", spawns=" + spawns +
                 '}';
     }
 }
