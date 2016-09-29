@@ -112,7 +112,7 @@ public class UserCommands {
             i++;
             message(sender, plugin.getSettings().getArenaListMessage()
                     .replace("{id}", String.valueOf(i))
-                    .replace("{name}", arena.getName()));
+                    .replace("{arena}", arena.getName()));
         }
     }
 
