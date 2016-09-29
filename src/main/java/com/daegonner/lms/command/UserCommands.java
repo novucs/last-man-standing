@@ -35,7 +35,14 @@ public class UserCommands {
         }
 
         Player player = (Player) sender;
-        plugin.getGameTask().getLobby().getPlayerQueue().add(player);
+        Lobby lobby = plugin.getGameTask().getLobby();
+
+        if (lobby.getPlayerQueue().contains(player)) {
+            player.sendMessage(plugin.getSettings().getLobbyAlreadyJoinedMessage());
+            return;
+        }
+
+        lobby.getPlayerQueue().add(player);
         message(sender, plugin.getSettings().getLobbyJoinedMessage());
     }
 

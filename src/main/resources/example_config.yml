@@ -9,6 +9,7 @@ messages:
   lobby-joined: "&eSuccessfully joined the LMS lobby"
   lobby-scheduled: "&eNext lobby scheduled to run in &d{time}"
   lobby-not-joined: "&cYou are currently not in the lobby"
+  lobby-already-joined: "&cYou are already in the lobby"
   game-teleported: "&eYou have been teleported into LMS"
   game-warmup: "&eProtection ends in &d{time}"
   game-cancelled: "&eLMS has been cancelled"
