@@ -66,7 +66,30 @@ public class Game {
      * Pulses the current game.
      */
     public void pulse() {
-        // TODO: Implement fail safe checks.
+        checkPlayers(participants.iterator(), true);
+        checkPlayers(spectators.iterator(), false);
+    }
+
+    /**
+     * Checks all players given if they are inside the arena. In the event the
+     * player is not within the arena region, they will be restored and removed
+     * from the game.
+     *
+     * @param players the players to check.
+     * @param searchWinner search for the winner if removed from the game.
+     */
+    private void checkPlayers(Iterator<Player> players, boolean searchWinner) {
+        Player player;
+        while (players.hasNext()) {
+            player = players.next();
+            if (!arena.getRegion().isInside(player.getLocation())) {
+                players.remove();
+                restore(player);
+                if (searchWinner) {
+                    searchWinner();
+                }
+            }
+        }
     }
 
     /**
@@ -134,6 +157,7 @@ public class Game {
         if (participants.remove(player) || spectators.remove(player)) {
             player.spigot().respawn();
             restore(player);
+            searchWinner();
         }
     }
 
@@ -155,9 +179,14 @@ public class Game {
     }
 
     public boolean exit(Player player) {
-        boolean quit = participants.remove(player) || spectators.remove(player);
-        if (!quit) {
+        boolean participant = participants.remove(player);
+        boolean spectator = spectators.remove(player);
+        if (!participant && !spectator) {
             return false;
+        }
+
+        if (participant) {
+            searchWinner();
         }
 
         restore(player);
