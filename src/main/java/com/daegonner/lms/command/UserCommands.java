@@ -125,12 +125,12 @@ public class UserCommands {
             for (ArenaSpawn spawn : arena.getSpawns()) {
                 id++;
                 target.append(plugin.getSettings().getArenaInfoSpawnMessage()
-                        .replace("id", String.valueOf(id))
-                        .replace("x", String.valueOf(spawn.getX()))
-                        .replace("y", String.valueOf(spawn.getY()))
-                        .replace("z", String.valueOf(spawn.getZ()))
-                        .replace("yaw", String.valueOf(spawn.getYaw()))
-                        .replace("pitch", String.valueOf(spawn.getPitch()))
+                        .replace("{id}", String.valueOf(id))
+                        .replace("{x}", String.valueOf(spawn.getX()))
+                        .replace("{y}", String.valueOf(spawn.getY()))
+                        .replace("{z}", String.valueOf(spawn.getZ()))
+                        .replace("{yaw}", String.valueOf(spawn.getYaw()))
+                        .replace("{pitch}", String.valueOf(spawn.getPitch()))
                 );
                 target.append("\n");
             }
