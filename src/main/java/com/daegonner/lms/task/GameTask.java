@@ -171,9 +171,10 @@ public class GameTask extends BukkitRunnable {
         long remaining = TimeUnit.MILLISECONDS.toSeconds(getRemainingCountdown());
 
         for (int time : plugin.getSettings().getAnnouncementTimes()) {
-            if (time < remaining && lastCountdown > time) {
+            if (time >= remaining && time < lastCountdown) {
                 broadcast(plugin.getSettings().getLobbyCountdownMessage().replace("{time}",
                         DurationUtils.format((int) remaining)));
+                lastCountdown = time;
                 return;
             }
         }
