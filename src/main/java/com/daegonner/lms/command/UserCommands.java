@@ -138,7 +138,7 @@ public class UserCommands {
         };
         message(sender, plugin.getSettings().getArenaInfoMessage()
                 .replace("{arena}", arena.getName())
-                .replace("world", arena.getRegion().getMax().getWorld().getName())
+                .replace("{world}", arena.getRegion().getMax().getWorld().getName())
                 .replace("{minX}", String.valueOf(arena.getRegion().getMin().getX()))
                 .replace("{minY}", String.valueOf(arena.getRegion().getMin().getY()))
                 .replace("{minZ}", String.valueOf(arena.getRegion().getMin().getZ()))
