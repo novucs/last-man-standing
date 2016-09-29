@@ -342,7 +342,7 @@ public class Settings {
         arenaInfoMessage = format(getString("messages.arena-info", "&e&l -- Arena {arena} --\n" +
                 "&eRegion: {world} {minX},{minY},{minZ} -> {maxX},{maxY},{maxZ}\n" +
                 "{spawns}"));
-        arenaInfoSpawnMessage = format(getString("messages.arena-info-spawn", "&eSpawn {id}: {x} {y} {z}"));
+        arenaInfoSpawnMessage = format(getString("messages.arena-info-spawn", "&eSpawn {id}: {x},{y},{z} yaw:{yaw} pitch:{pitch}"));
 
         lobbyStart = getInt("settings.lobby-start", 10800);
         lobbyCountdown = getInt("settings.lobby-countdown", 300);

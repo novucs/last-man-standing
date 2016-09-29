@@ -126,11 +126,11 @@ public class UserCommands {
                 id++;
                 target.append(plugin.getSettings().getArenaInfoSpawnMessage()
                         .replace("{id}", String.valueOf(id))
-                        .replace("{x}", String.valueOf(spawn.getX()))
-                        .replace("{y}", String.valueOf(spawn.getY()))
-                        .replace("{z}", String.valueOf(spawn.getZ()))
-                        .replace("{yaw}", String.valueOf(spawn.getYaw()))
-                        .replace("{pitch}", String.valueOf(spawn.getPitch()))
+                        .replace("{x}", String.valueOf((int) spawn.getX()))
+                        .replace("{y}", String.valueOf((int) spawn.getY()))
+                        .replace("{z}", String.valueOf((int) spawn.getZ()))
+                        .replace("{yaw}", String.valueOf((int) spawn.getYaw()))
+                        .replace("{pitch}", String.valueOf((int) spawn.getPitch()))
                 );
                 target.append("\n");
             }
