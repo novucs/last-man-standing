@@ -2,6 +2,7 @@ package com.daegonner.lms.util;
 
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -9,6 +10,48 @@ import java.util.stream.Collectors;
 public final class GenericUtils {
 
     private GenericUtils() {
+    }
+
+    public static Map<String, Object> serializeItem(ItemStack item) {
+        Map<String, Object> target = new HashMap<>();
+        if (item.getType() != Material.AIR) {
+            target.put("material", item.getType().name().toLowerCase());
+        }
+
+        if (item.getDurability() != 0) {
+            target.put("data", item.getDurability());
+        }
+
+        if (item.getAmount() != 1) {
+            target.put("amount", item.getAmount());
+        }
+
+        if (item.getItemMeta().getDisplayName() != null) {
+            target.put("name", item.getItemMeta().getDisplayName());
+        }
+
+        if (item.getItemMeta().getLore() != null) {
+            target.put("lore", item.getItemMeta().getLore());
+        }
+
+        if (!item.getEnchantments().isEmpty()) {
+            for (Map.Entry<Enchantment, Integer> entry : item.getItemMeta().getEnchants().entrySet()) {
+                target.put("enchantments." + entry.getKey().getName().toLowerCase(), entry.getValue());
+            }
+        }
+
+        return target;
+    }
+
+    public static ItemStack parseItem(Map<?, ?> data) {
+        ItemFactoryBuilder builder = new ItemFactoryBuilder();
+        GenericUtils.getEnum(Material.class, data, "material").ifPresent(builder::material);
+        GenericUtils.getInt(data, "data").ifPresent(b -> builder.data(b.byteValue()));
+        GenericUtils.getInt(data, "amount").ifPresent(builder::min);
+        GenericUtils.getString(data, "name").ifPresent(builder::name);
+        GenericUtils.getList(data, "lore").ifPresent(l -> builder.lore(GenericUtils.castList(String.class, l)));
+        GenericUtils.getMap(data, "enchantments").ifPresent(m -> builder.enchantments(GenericUtils.parseEnchantments(m)));
+        return builder.build().forceCreate();
     }
 
     public static Map<Enchantment, Integer> parseEnchantments(Map<?, ?> toParse) {

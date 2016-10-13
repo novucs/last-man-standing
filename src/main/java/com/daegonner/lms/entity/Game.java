@@ -8,6 +8,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Contains all data for an active LMS game.
@@ -75,7 +76,7 @@ public class Game {
      * player is not within the arena region, they will be restored and removed
      * from the game.
      *
-     * @param players the players to check.
+     * @param players      the players to check.
      * @param searchWinner search for the winner if removed from the game.
      */
     private void checkPlayers(Iterator<Player> players, boolean searchWinner) {
@@ -185,11 +186,12 @@ public class Game {
             return false;
         }
 
+        restore(player);
+
         if (participant) {
             searchWinner();
         }
 
-        restore(player);
         return true;
     }
 
@@ -199,8 +201,20 @@ public class Game {
         }
 
         Player winner = participants.iterator().next();
+        restore(winner);
         broadcast(plugin.getSettings().getGameCompleteMessage().replace("{player}", winner.getName()));
-        // TODO: Grant winner crate.
+        winner.getInventory().addItem(getRewardCrate());
+    }
+
+    private ItemStack getRewardCrate() {
+        ItemStack crate = plugin.getSettings().getRewardCrate();
+        List<String> lore = crate.getItemMeta().hasLore() ?
+                crate.getItemMeta().getLore() : new ArrayList<>(LastManStandingPlugin.getRewardCrateLore().size());
+        lore.addAll(LastManStandingPlugin.getRewardCrateLore().stream()
+                .map(line -> line.replace("{arena}", arena.getName()))
+                .collect(Collectors.toList()));
+        crate.getItemMeta().setLore(lore);
+        return crate;
     }
 
     public void restore(Player player) {

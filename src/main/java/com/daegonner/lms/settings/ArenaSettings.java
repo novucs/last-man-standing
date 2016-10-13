@@ -17,7 +17,10 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionType;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class ArenaSettings {
@@ -212,20 +215,20 @@ public class ArenaSettings {
     }
 
     private ItemStack loadItem(String path, ItemStack def) {
-        ConfigurationSection section = getSection(path, serializeItem(def));
-        return deserializeItem(section.getValues(true));
+        ConfigurationSection section = getSection(path, GenericUtils.serializeItem(def));
+        return GenericUtils.parseItem(section.getValues(true));
     }
 
     private List<ItemStack> loadInventory(String path, List<ItemStack> def) {
         List<Map<?, ?>> items = getMapList(path, serializeItems(def));
         return items.stream()
-                .map(this::deserializeItem)
+                .map(GenericUtils::parseItem)
                 .collect(Collectors.toList());
     }
 
     private List<Map<String, Object>> serializeItems(List<ItemStack> items) {
         return items.stream()
-                .map(this::serializeItem)
+                .map(GenericUtils::serializeItem)
                 .collect(Collectors.toList());
     }
 
@@ -274,47 +277,5 @@ public class ArenaSettings {
         return rewards.stream()
                 .map(ConfigurationSerializable::serialize)
                 .collect(Collectors.toList());
-    }
-
-    private Map<String, Object> serializeItem(ItemStack item) {
-        Map<String, Object> target = new HashMap<>();
-        if (item.getType() != Material.AIR) {
-            target.put("material", item.getType().name().toLowerCase());
-        }
-
-        if (item.getDurability() != 0) {
-            target.put("data", item.getDurability());
-        }
-
-        if (item.getAmount() != 1) {
-            target.put("amount", item.getAmount());
-        }
-
-        if (item.getItemMeta().getDisplayName() != null) {
-            target.put("name", item.getItemMeta().getDisplayName());
-        }
-
-        if (item.getItemMeta().getLore() != null) {
-            target.put("lore", item.getItemMeta().getLore());
-        }
-
-        if (!item.getEnchantments().isEmpty()) {
-            for (Map.Entry<Enchantment, Integer> entry : item.getItemMeta().getEnchants().entrySet()) {
-                target.put("enchantments." + entry.getKey().getName().toLowerCase(), entry.getValue());
-            }
-        }
-
-        return target;
-    }
-
-    private ItemStack deserializeItem(Map<?, ?> data) {
-        ItemFactoryBuilder builder = new ItemFactoryBuilder();
-        GenericUtils.getEnum(Material.class, data, "material").ifPresent(builder::material);
-        GenericUtils.getInt(data, "data").ifPresent(b -> builder.data(b.byteValue()));
-        GenericUtils.getInt(data, "amount").ifPresent(builder::min);
-        GenericUtils.getString(data, "name").ifPresent(builder::name);
-        GenericUtils.getList(data, "lore").ifPresent(l -> builder.lore(GenericUtils.castList(String.class, l)));
-        GenericUtils.getMap(data, "enchantments").ifPresent(m -> builder.enchantments(GenericUtils.parseEnchantments(m)));
-        return builder.build().forceCreate();
     }
 }

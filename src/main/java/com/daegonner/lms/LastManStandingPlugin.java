@@ -17,6 +17,7 @@ import com.sk89q.intake.dispatcher.SimpleDispatcher;
 import com.sk89q.intake.parametric.ParametricBuilder;
 import com.sk89q.intake.util.auth.AuthorizationException;
 import org.apache.commons.lang.StringUtils;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -36,6 +37,11 @@ import static org.bukkit.ChatColor.*;
 
 public class LastManStandingPlugin extends JavaPlugin {
 
+    private static final ImmutableList<String> REWARD_CRATE_LORE = ImmutableList.of(
+            ChatColor.LIGHT_PURPLE + "Achieved by winning LMS events",
+            ChatColor.LIGHT_PURPLE + "Arena: {arena}"
+    );
+
     private static final ImmutableList<Class<? extends Model>> DATABASE_CLASSES = ImmutableList.of(
             WorldModel.class,
             BlockPosModel.class,
@@ -54,6 +60,10 @@ public class LastManStandingPlugin extends JavaPlugin {
             new PlayerListener(this)
     );
     private Dispatcher dispatcher;
+
+    public static ImmutableList<String> getRewardCrateLore() {
+        return REWARD_CRATE_LORE;
+    }
 
     public ExecutorService getExecutorService() {
         return executorService;

@@ -1,11 +1,15 @@
 package com.daegonner.lms.settings;
 
 import com.daegonner.lms.LastManStandingPlugin;
+import com.daegonner.lms.util.GenericUtils;
+import com.daegonner.lms.util.ItemFactoryBuilder;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,6 +19,12 @@ import java.util.stream.Collectors;
 public class Settings {
 
     private static final int LATEST_VERSION = 1;
+
+    private static final ItemStack DEFAULT_REWARD_CRATE = new ItemFactoryBuilder()
+            .material(Material.CHEST)
+            .name(ChatColor.YELLOW + "" + ChatColor.BOLD + "LMS Crate")
+            .build()
+            .forceCreate();
 
     private final LastManStandingPlugin plugin;
 
@@ -60,6 +70,7 @@ public class Settings {
     private int lobbyStart;
     private int lobbyCountdown;
     private List<Integer> announcementTimes;
+    private ItemStack rewardCrate;
 
     private ArenaSettings defaultArenaSettings;
     private Map<String, ArenaSettings> arenaSettingsMap;
@@ -228,6 +239,10 @@ public class Settings {
         return lobbyCountdown;
     }
 
+    public ItemStack getRewardCrate() {
+        return rewardCrate;
+    }
+
     public List<Integer> getAnnouncementTimes() {
         return announcementTimes;
     }
@@ -355,6 +370,7 @@ public class Settings {
         announcementTimes = getList("settings.announcement-times",
                 Arrays.asList(1, 2, 3, 4, 5, 10, 30, 60, 120, 300, 600, 900, 1800), Integer.class);
         Collections.sort(announcementTimes);
+        rewardCrate = loadItem("reward-crate", DEFAULT_REWARD_CRATE);
 
         arenaSettingsMap = new HashMap<>();
 
@@ -386,5 +402,11 @@ public class Settings {
     public String getDocumentation() {
         Scanner scanner = new Scanner(plugin.getResource("readme.txt")).useDelimiter("\\A");
         return scanner.hasNext() ? scanner.next() : "";
+    }
+
+    private ItemStack loadItem(String path, ItemStack def) {
+        config.addDefault(path, GenericUtils.serializeItem(def));
+        ConfigurationSection section = getOrDefaultSection(path);
+        return GenericUtils.parseItem(section.getValues(true));
     }
 }
