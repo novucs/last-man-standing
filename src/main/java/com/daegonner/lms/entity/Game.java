@@ -203,7 +203,8 @@ public class Game {
         Player winner = participants.iterator().next();
         restore(winner);
         broadcast(plugin.getSettings().getGameCompleteMessage().replace("{player}", winner.getName()));
-        winner.getInventory().addItem(getRewardCrate());
+        winner.getInventory().addItem(getRewardCrate()).forEach((amount, stack) ->
+                winner.getWorld().dropItemNaturally(winner.getLocation(), stack));
     }
 
     private ItemStack getRewardCrate() {
