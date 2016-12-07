@@ -216,7 +216,7 @@ public class AdminCommands {
     @Require("lms.delspawn")
     public void delspawn(CommandSender sender, Arena arena, Integer spawnId) {
         // Disallow deleting invalid spawns.
-        if (arena.getSpawns().size() < spawnId) {
+        if (arena.getSpawns().size() < spawnId--) {
             sender.sendMessage(plugin.getSettings().getArenaSpawnInvalidMessage());
             return;
         }

@@ -16,6 +16,8 @@ import java.util.Objects;
 @UniqueConstraint(columnNames = {"world_id", "x", "y", "z", "yaw", "pitch"})
 public class EntityPosModel implements Model {
 
+    private static final double TOLERANCE = 0.0001;
+
     @Id
     @GeneratedValue
     private int id;
@@ -178,11 +180,11 @@ public class EntityPosModel implements Model {
                 .find(EntityPosModel.class)
                 .where()
                 .eq("world", world)
-                .eq("x", spawn.getX())
-                .eq("y", spawn.getY())
-                .eq("z", spawn.getZ())
-                .eq("yaw", spawn.getYaw())
-                .eq("pitch", spawn.getPitch())
+                .between("x", spawn.getX() - TOLERANCE, spawn.getX() + TOLERANCE)
+                .between("y", spawn.getY() - TOLERANCE, spawn.getY() + TOLERANCE)
+                .between("z", spawn.getZ() - TOLERANCE, spawn.getZ() + TOLERANCE)
+                .between("yaw", spawn.getYaw() - TOLERANCE, spawn.getYaw() + TOLERANCE)
+                .between("pitch", spawn.getPitch() - TOLERANCE, spawn.getPitch() + TOLERANCE)
                 .findUnique();
 
         if (model == null) {
