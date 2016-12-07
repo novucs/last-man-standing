@@ -5,6 +5,7 @@ import com.daegonner.lms.entity.Arena;
 import com.daegonner.lms.entity.ArenaSpawn;
 import com.daegonner.lms.entity.Region;
 import com.daegonner.lms.model.*;
+import com.daegonner.lms.util.DurationUtils;
 import com.sk89q.intake.Command;
 import com.sk89q.intake.Require;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
@@ -150,7 +151,8 @@ public class AdminCommands {
             // Locally update the new time on the server thread.
             plugin.getServer().getScheduler().runTask(plugin, () -> {
                 plugin.getGameTask().setNextLobby(nextLobby);
-                sender.sendMessage(plugin.getSettings().getLobbyScheduledMessage());
+                sender.sendMessage(plugin.getSettings().getLobbyScheduledMessage()
+                        .replace("{time}", DurationUtils.format(seconds)));
             });
         });
     }
