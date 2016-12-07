@@ -102,7 +102,7 @@ public class GameTask extends BukkitRunnable {
      * @return {@code true} if a new lobby should be created.
      */
     private boolean isNextLobbyReady() {
-        return System.currentTimeMillis() <= nextLobby;
+        return System.currentTimeMillis() >= nextLobby;
     }
 
     /**
