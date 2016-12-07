@@ -290,8 +290,9 @@ public class Settings {
     }
 
     private ConfigurationSection getOrDefaultSection(String key) {
-        return config.getConfigurationSection(key).getKeys(false).isEmpty() ?
-                config.getDefaults().getConfigurationSection(key) : config.getConfigurationSection(key);
+        ConfigurationSection section = config.getConfigurationSection(key);
+        return section == null || section.getValues(true).isEmpty() ?
+                config.getDefaults().getConfigurationSection(key) : section;
     }
 
     private <T> List<?> getList(String key, List<T> def) {
@@ -370,7 +371,7 @@ public class Settings {
         announcementTimes = getList("settings.announcement-times",
                 Arrays.asList(1, 2, 3, 4, 5, 10, 30, 60, 120, 300, 600, 900, 1800), Integer.class);
         Collections.sort(announcementTimes);
-        rewardCrate = loadItem("reward-crate", DEFAULT_REWARD_CRATE);
+        rewardCrate = loadItem("settings.reward-crate", DEFAULT_REWARD_CRATE);
 
         arenaSettingsMap = new HashMap<>();
 
@@ -405,7 +406,9 @@ public class Settings {
     }
 
     private ItemStack loadItem(String path, ItemStack def) {
-        config.addDefault(path, GenericUtils.serializeItem(def));
+        config.getDefaults().createSection(path);
+        GenericUtils.serializeItem(def).forEach((k, v) ->
+                config.getConfigurationSection(path).addDefault(k, v));
         ConfigurationSection section = getOrDefaultSection(path);
         return GenericUtils.parseItem(section.getValues(true));
     }

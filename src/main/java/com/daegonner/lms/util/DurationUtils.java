@@ -2,7 +2,7 @@ package com.daegonner.lms.util;
 
 import org.apache.commons.lang.StringUtils;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import static java.util.concurrent.TimeUnit.*;
@@ -13,7 +13,7 @@ public final class DurationUtils {
     }
 
     public static String format(int seconds) {
-        List<String> parts = new ArrayList<>();
+        List<String> parts = new LinkedList<>();
         long days = seconds / SECONDS.convert(1, DAYS);
         if (days > 0) {
             seconds -= SECONDS.convert(days, DAYS);
